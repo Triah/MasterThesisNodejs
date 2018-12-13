@@ -3,14 +3,13 @@ socket.on('message', function(data) {
   console.log(data);
 });
 
+/*
 var movement = {
   up: false,
   down: false,
   left: false,
   right: false
 }
-
-
 document.addEventListener('keydown', function(event) {
   switch (event.keyCode) {
     case 65: // A
@@ -43,12 +42,14 @@ document.addEventListener('keyup', function(event) {
       break;
   }
 });
-
-socket.emit('new player');
-
 setInterval(function() {
   socket.emit('movement', movement);
 }, 1000 / 60);
+*/
+
+socket.emit('new player');
+
+
 
 var canvas = document.getElementById('canvas');
 canvas.width = 800;
@@ -56,11 +57,12 @@ canvas.height = 600;
 var context = canvas.getContext('2d');
 socket.on('state', function(players) {
   context.clearRect(0, 0, 800, 600);
-  context.fillStyle = 'green';
+  //context.fillStyle = 'green';
   for (var id in players) {
     var player = players[id];
-    context.beginPath();
-    context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
-    context.fill();
+    squareShape(context, 10,10,50,50,true);
+    squareShape(context, 70,10,50,50,false);
+    //context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
+    //context.fill();
   }
 });

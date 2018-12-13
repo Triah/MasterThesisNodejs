@@ -2,12 +2,12 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var mongoDbActions = require('./static/mongoDBActions');
 var socketIO = require('socket.io');
 var app = express();
 var server = http.Server(app);
 var io = socketIO(server);
 var cors = require('cors');
-var dbName = "MasterThesisMongoDb";
 var MongoClient = require('mongodb').MongoClient;
 const dbPath = "mongodb://localhost:27017/";
 
@@ -25,6 +25,10 @@ server.listen(5000, function() {
   console.log('Starting server on port 5000');
 });
 
+mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
+mongoDbActions.findAllRooms(MongoClient,dbPath);
+
+//mongoDbActions.findAllUsers(MongoClient, dbPath);
 
 /*
 var jsonUser = {"_id":"jsonName", "token":"socketid"};
@@ -69,7 +73,7 @@ io.on('connection', function(socket) {
     delete players[socket.id]
   }); 
 
-  socket.on('movement', function(data) {
+  /*socket.on('movement', function(data) {
     var player = players[socket.id] || {};
     if (data.left) {
         player.x -= 5;
@@ -83,7 +87,7 @@ io.on('connection', function(socket) {
     if (data.down) {
         player.y += 5;
     }
-  });
+  });*/
 });
 
 setInterval(function() {
