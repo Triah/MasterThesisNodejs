@@ -10,10 +10,29 @@ var io = socketIO(server);
 var cors = require('cors');
 var MongoClient = require('mongodb').MongoClient;
 const dbPath = "mongodb://localhost:27017/";
+var bodyParser = require('body-parser');
 
+var corsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+app.use(bodyParser.json());
+
+var username;
+app.post('/', function(req, res){
+  username = req.body.email;
+  res.send(res.header);
+});
 
 app.set('port', 5000);
-app.use('/static', express.static(__dirname + '/static'),cors());
+app.use('/static', express.static(__dirname + '/static'));
 // Routing
 
 app.get('/', function(request, response) {
@@ -25,69 +44,30 @@ server.listen(5000, function() {
   console.log('Starting server on port 5000');
 });
 
+/*
 mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
 mongoDbActions.findAllRooms(MongoClient,dbPath);
-
-//mongoDbActions.findAllUsers(MongoClient, dbPath);
-
-/*
-var jsonUser = {"_id":"jsonName", "token":"socketid"};
-
-MongoClient.connect(dbPath, function(err, db){
-  if(err) throw err;
-  var dbContent = db.db(dbName);
-  dbContent.collection("Users").insertOne({
-    jsonUser
-  }, (err, result) => {
-    if(err){
-      console.log(err);
-    } else {
-      db.close();
-    }
-  })
-});
-
-MongoClient.connect(dbPath, function(err,db){
-  if(err) throw err;
-  var dbContent = db.db(dbName);
-  dbContent.collection("Users").find({}).toArray(function(err, result){
-    if(err) throw err;
-    console.log(result);
-    db.close();
-  })
-});
 */
+
 
 //Websocket actions
 var players = {};
 io.on('connection', function(socket) {
   socket.on('new player', function() {
-    console.log(socket.id);
-    players[socket.id] = {
+    if(username != null){
+      players[socket.id] = {
+      username: username,
       x: 300,
       y: 300
     };
+    console.log(players[socket.id]);
+    }
+    
   });
 
   socket.on('disconnect', function() {
     delete players[socket.id]
   }); 
-
-  /*socket.on('movement', function(data) {
-    var player = players[socket.id] || {};
-    if (data.left) {
-        player.x -= 5;
-    }
-    if (data.up) {
-        player.y -= 5;
-    }
-    if (data.right) {
-        player.x += 5;
-    }
-    if (data.down) {
-        player.y += 5;
-    }
-  });*/
 });
 
 setInterval(function() {

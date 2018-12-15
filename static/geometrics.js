@@ -7,3 +7,4 @@ function squareShape(context, x, y, w, h, fill){
         context.fillRect(x,y,w,h)
     }
 }
+
