@@ -60,6 +60,8 @@ exports.insertOneUser = function(client, path, id, username){
         });
   });
 };
+
+
 exports.findAllUsers = function(client, path){
     client.connect(path, function(err,db){
         if(err) throw err;

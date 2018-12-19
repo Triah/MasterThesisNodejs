@@ -11,7 +11,6 @@ var cors = require('cors');
 var MongoClient = require('mongodb').MongoClient;
 const dbPath = "mongodb://localhost:27017/";
 var bodyParser = require('body-parser');
-
 var corsOptions = {
   origin: '*',
   methods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
@@ -44,10 +43,13 @@ server.listen(5000, function() {
   console.log('Starting server on port 5000');
 });
 
-/*
-mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
+//######################################
+var canvasObjects = [];
+
+//mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
+
 mongoDbActions.findAllRooms(MongoClient,dbPath);
-*/
+
 
 
 //Websocket actions
@@ -60,9 +62,22 @@ io.on('connection', function(socket) {
       x: 300,
       y: 300
     };
+    username = null;
     console.log(players[socket.id]);
     }
+    else {
+      players[socket.id] = {
+        x:300,
+        y:300
+      };
+    }
     
+  });
+
+  socket.on('canvasObjects', function(objectsList){
+    for(var i = 0; i < objectsList.length; i++){
+      canvasObjects[i] = objectsList[i];
+    }
   });
 
   socket.on('disconnect', function() {
