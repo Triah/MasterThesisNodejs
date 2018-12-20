@@ -24,17 +24,17 @@ socket.emit('new player');
 
 
 
-const square = new Rectangle(10,10,100,100);
+const rect = new Rectangle(10,10,100,100);
+const circle = new Circle(60,170,50);
+const filledRect = new FilledRectangle(120,10,100,100,"blue","test", "white");
 
-function addRect(type,x,y,w,h){
-  var rect = new Rectangle(x,y,w,h);
-  rect.type = type;
-  canvasObjects.push(rect);
-}
+canvasObjects.push(rect);
+canvasObjects.push(circle);
+canvasObjects.push(filledRect);
+
+
 
 /*This needs to be done more clean*/
-addRect("strokeRect", square._x, square._y, square._w, square._h);
-addRect("fillRect", 120, 10, 100, 100);
 canvasUpdated();
 
 console.log(canvasObjects[1]);
@@ -46,22 +46,7 @@ function draw(){
     context.beginPath();
     for(var i=0; i < canvasObjects.length; i++){
       var obj = canvasObjects[i];
-      
-      if(obj.type == "strokeRect"){
-
-        context.strokeRect(obj._x,obj._y,obj._w,obj._h);
-      } 
-      
-      else if(obj.type == "fillRect"){
-        obj.setFill("#FF0000");
-        context.fillStyle = obj._fill;
-        context.fillRect(obj._x,obj._y,obj._w,obj._h);
-        context.fillStyle = "white";
-        context.textAlign ="center";
-        context.fillText("Testing text", obj._x +obj._w/2, obj._y + obj._h/2);
-      }
-      
-      console.log(canvasObjects);
+      obj.draw(context);
     }
     canvasUpToDate = true;
   }
