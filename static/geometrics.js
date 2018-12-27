@@ -1,13 +1,14 @@
 class Shape{
-    constructor(x,y){
+    constructor(id, x,y){
+        this.id = id;
         this.x = x;
         this.y = y;
     }
 }
 
 class Square extends Shape{
-    constructor(x,y,w,h){
-        super(x,y);
+    constructor(id,x,y,w,h){
+        super(id,x,y);
         this.w = w;
         this.h = h;
     }
@@ -18,8 +19,8 @@ class Square extends Shape{
 }
 
 class Circle extends Shape{
-    constructor(x,y,r){
-        super(x,y);
+    constructor(id,x,y,r){
+        super(id,x,y);
         this.r = r;
     }
 
@@ -31,8 +32,8 @@ class Circle extends Shape{
 }
 
 class FilledRectangle extends Square{
-    constructor(x,y,w,h,fill,text,textColor){
-        super(x,y,w,h);
+    constructor(id,x,y,w,h,fill,text,textColor){
+        super(id,x,y,w,h);
         this.fill = fill;
         this.text = text;
         this.textColor = textColor;
@@ -50,8 +51,8 @@ class FilledRectangle extends Square{
 }
 
 class Rectangle extends Square{
-    constructor(x,y,w,h,text){
-        super(x,y,w,h);
+    constructor(id,x,y,w,h,text){
+        super(id,x,y,w,h);
         this.text = text;
     }
 

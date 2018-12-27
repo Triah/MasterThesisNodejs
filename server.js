@@ -44,7 +44,11 @@ server.listen(5000, function() {
 });
 
 //######################################
-var canvasObjects = [];
+var canvasObjects = {}
+
+canvasObjects[0] = {id: 0, type: "Rectangle", x: 10, y:10, w: 100, h: 100};
+canvasObjects[1] = {id: 1, type: "FilledRectangle", x: 200, y:10, w:150, h:150};
+canvasObjects[2] = {id: 2, type: "Circle", x: 50, y: 170, r: 50};
 
 //mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
 
@@ -74,9 +78,15 @@ io.on('connection', function(socket) {
     
   });
 
-  socket.on('canvasObjects', function(objectsList){
-    for(var i = 0; i < objectsList.length; i++){
-      canvasObjects[i] = objectsList[i];
+  socket.emit('initObjects', canvasObjects);
+  
+  socket.on('updateItemPosition', function(lockedItem){
+    for(let v in canvasObjects){
+      if(v == lockedItem.id){
+        canvasObjects[v].x = lockedItem.x;
+        canvasObjects[v].y = lockedItem.y;
+        io.sockets.emit('updateItemPositionDone', lockedItem);
+      }
     }
   });
 

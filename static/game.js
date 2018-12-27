@@ -6,11 +6,6 @@ canvas.height = 600;
 var context = canvas.getContext('2d');
 var canvasUpToDate;
 
-
-socket.on('message', function(data) {
-  console.log(data);
-});
-
 function canvasUpdated(){
   context.clearRect(0,0,800,600);
   canvasUpToDate = false;
@@ -25,14 +20,21 @@ socket.emit('new player');
 /*
 socket on get json object that defines what should be on the canvas
 */
+function createObjects(list){
+  for(let i in list){
+    if(list[i].type == "Rectangle") {
+      canvasObjects[i] = new Rectangle(list[i].id,list[i].x, list[i].y, list[i].w, list[i].h);
+    } else if(list[i].type == "FilledRectangle"){
+      canvasObjects[i] = new FilledRectangle(list[i].id,list[i].x, list[i].y, list[i].w, list[i].h, list[i].fill, list[i].text, list[i].textColor);
+    } else if(list[i].type == "Circle"){
+      canvasObjects[i] = new Circle(list[i].id,list[i].x,list[i].y,list[i].r);
+    }
+  }
+}
 
-const rect = new Rectangle(500,10,100,100);
-const circle = new Circle(60,170,50);
-const filledRect = new FilledRectangle(120,10,100,100,"blue","test", "white");
-
-canvasObjects.push(rect);
-canvasObjects.push(circle);
-canvasObjects.push(filledRect);
+socket.on("initObjects", function(objectList){
+  createObjects(objectList);
+});
 
 
 
@@ -41,9 +43,12 @@ canvasUpdated();
 
 //socket.emit('canvasObjects', canvasObjects);
 
+//drag and drop stuff
+var lockedItem = null;
+var itemIsLocked = false;
+var DragOffset = { x: 0, y:0 };
 canvas.onmousedown = function(e){
   //make sure only one item is picked
-  var itemIsLocked = false;
   for(var i = 0; i < canvasObjects.length; i++){
     if(!itemIsLocked && 
       e.x+10 < canvasObjects[i].x + canvasObjects[i].w +20 && 
@@ -51,23 +56,58 @@ canvas.onmousedown = function(e){
       e.y - 10 > canvasObjects[i].y &&
       e.y - 10 < canvasObjects[i].y + canvasObjects[i].h){
       itemIsLocked = true;
-      //set this to variables to get the offset values and use these in another function
-      canvasObjects[i].x = e.x - 10 - canvasObjects[i].w/2;
-      canvasObjects[i].y = e.y - 10 - canvasObjects[i].h/2
-      canvasUpdated();
+      lockedItem = canvasObjects[i];
+    } else if(!itemIsLocked &&
+    e.x+10 < canvasObjects[i].x + canvasObjects[i].r *2 &&
+    e.x+10 > canvasObjects[i].x &&
+    e.y-10 > canvasObjects.y &&
+    e.y-10 < canvasObjects[i].y + canvasObjects[i].r * 2){
+      itemIsLocked = true;
+      lockedItem = canvasObjects[i];
     }
   }
-  //unlock item
-  itemIsLocked = false;
 }
+
+canvas.onmousemove = function(e){
+  if(itemIsLocked && lockedItem != null){
+    lockedItem.x = e.x - 10 - lockedItem.w/2;
+    lockedItem.y = e.y - 10 - lockedItem.h/2;
+    context.clearRect(0,0,canvas.width,canvas.height);
+    for(var i = 0; i<canvasObjects.length;i++){
+      canvasObjects[i].draw(context);
+    }
+  }
+}
+
+canvas.onmouseup = function(e){
+  //unlock item
+  if(lockedItem != null){
+    socket.emit('updateItemPosition', lockedItem);
+    itemIsLocked = false;
+    lockedItem = null;
+  }
+  
+}
+
+socket.on('updateItemPositionDone', function(lockedItem){
+  console.log("hej");
+  canvasObjects[lockedItem.id].x = lockedItem.x;
+  canvasObjects[lockedItem.id].y = lockedItem.y;
+  context.clearRect(0,0,canvas.width,canvas.height);
+  for(var i = 0; i<canvasObjects.length;i++){
+    canvasObjects[i].draw(context);
+  }
+});
 
 function draw(){
   if(canvasUpToDate == false){
     context.beginPath();
+    
     for(var i=0; i < canvasObjects.length; i++){
       var obj = canvasObjects[i];
       obj.draw(context);
     }
+    
     canvasUpToDate = true;
   }
   
