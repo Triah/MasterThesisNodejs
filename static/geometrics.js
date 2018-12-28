@@ -1,8 +1,10 @@
+
 class Shape{
     constructor(id, x,y){
         this.id = id;
         this.x = x;
         this.y = y;
+        this.colliding = false;
     }
 }
 
@@ -11,6 +13,23 @@ class Square extends Shape{
         super(id,x,y);
         this.w = w;
         this.h = h;
+    }
+
+    getCollisionArea(e){
+        if(e.x+10 < this.x + this.w +20 && 
+            e.x+10 > this.x && 
+            e.y - 10 > this.y &&
+            e.y - 10 < this.y + this.h){
+            this.colliding = true;
+        } else {
+            this.colliding = false;
+        }
+        return this.colliding
+    }
+
+    move(e){
+        this.x = e.x - 10 - this.w/2;
+        this.y = e.y - 10 - this.h/2;
     }
 
     area(){
@@ -22,6 +41,21 @@ class Circle extends Shape{
     constructor(id,x,y,r){
         super(id,x,y);
         this.r = r;
+    }
+
+    getCollisionArea(e){
+        var distance = Math.sqrt(Math.pow((this.x +15) - e.x,2) + Math.pow((this.y+10)-e.y,2));
+        if(distance < this.r){
+            this.colliding = true;
+        } else {
+            this.colliding = false;
+        }
+        return this.colliding;
+    }
+
+    move(e){
+        this.x = e.x - 10;
+        this.y = e.y - 10;
     }
 
     draw(context){

@@ -50,28 +50,16 @@ var DragOffset = { x: 0, y:0 };
 canvas.onmousedown = function(e){
   //make sure only one item is picked
   for(var i = 0; i < canvasObjects.length; i++){
-    if(!itemIsLocked && 
-      e.x+10 < canvasObjects[i].x + canvasObjects[i].w +20 && 
-      e.x+10 > canvasObjects[i].x && 
-      e.y - 10 > canvasObjects[i].y &&
-      e.y - 10 < canvasObjects[i].y + canvasObjects[i].h){
+    if(!itemIsLocked && canvasObjects[i].getCollisionArea(e)){
       itemIsLocked = true;
       lockedItem = canvasObjects[i];
-    } else if(!itemIsLocked &&
-    e.x+10 < canvasObjects[i].x + canvasObjects[i].r *2 &&
-    e.x+10 > canvasObjects[i].x &&
-    e.y-10 > canvasObjects.y &&
-    e.y-10 < canvasObjects[i].y + canvasObjects[i].r * 2){
-      itemIsLocked = true;
-      lockedItem = canvasObjects[i];
-    }
+    } 
   }
 }
 
 canvas.onmousemove = function(e){
   if(itemIsLocked && lockedItem != null){
-    lockedItem.x = e.x - 10 - lockedItem.w/2;
-    lockedItem.y = e.y - 10 - lockedItem.h/2;
+    lockedItem.move(e);
     context.clearRect(0,0,canvas.width,canvas.height);
     for(var i = 0; i<canvasObjects.length;i++){
       canvasObjects[i].draw(context);

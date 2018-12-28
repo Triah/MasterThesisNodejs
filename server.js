@@ -52,7 +52,7 @@ canvasObjects[2] = {id: 2, type: "Circle", x: 50, y: 170, r: 50};
 
 //mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
 
-mongoDbActions.findAllRooms(MongoClient,dbPath);
+//mongoDbActions.findAllRooms(MongoClient,dbPath);
 
 
 
