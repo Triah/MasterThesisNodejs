@@ -17,6 +17,9 @@ var draggable = false;
 
 socket.emit('new player');
 
+socket.on('new player in room', function(user, room){
+  //add user to list based on room
+});
 /*
 socket on get json object that defines what should be on the canvas
 */

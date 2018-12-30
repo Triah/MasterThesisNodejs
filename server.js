@@ -60,6 +60,7 @@ canvasObjects[2] = {id: 2, type: "Circle", x: 50, y: 170, r: 50};
 var players = {};
 io.on('connection', function(socket) {
   socket.on('new player', function() {
+    //TODO: check for rooms that are available given the gameinfo
     if(username != null){
       players[socket.id] = {
       username: username,

@@ -1,7 +1,9 @@
 var dbName = "MasterThesisMongoDb";
 
 //ROOM ACTIONS
-exports.createRoom = function(client, path, roomname){
+//capacity should be an int
+//users is a list of user objects
+exports.createRoom = function(client, path, roomname, capacity, users){
     var roomexists = false;
     client.connect(path, function(err, db){
         if(err) throw err;
@@ -16,7 +18,9 @@ exports.createRoom = function(client, path, roomname){
             }
             if(!roomexists){
                 dbContent.collection("GameRooms").insertOne({
-                    _id: roomname
+                    _id: roomname,
+                    capacity: capacity,
+                    usersOfRoom: users
                     }, (err, result) => {
                     if(err){
                         console.log(err);
@@ -28,6 +32,8 @@ exports.createRoom = function(client, path, roomname){
         });
     });
 };
+
+
 
 exports.findAllRooms = function(client, path){
     client.connect(path, function(err, db){
@@ -42,6 +48,22 @@ exports.findAllRooms = function(client, path){
 }
 
 
+//in this method, gameroom is the name of the room
+//user is a string representing the username
+//To use this method properly a recursive algorithm is probably optimal
+exports.addUserToRoom = function(client, path, gameroom, user){
+    client.connect(path, function(err, db){
+        if(err) throw err;
+        var dbContent = db.db(dbName);
+        var query = {_id: gameroom};
+        var updatevalue = {$set: {usersOfRoom: user}};
+        dbContent.collection("GameRooms").updateOne(query, updatevalue, function(err, res){
+            if(err) throw err;
+            console.log(gameroom + " was updated with a new user: " + user);
+            db.close();
+        })
+    })
+}
 
 //USER ACTIONS
 exports.insertOneUser = function(client, path, id, username){
