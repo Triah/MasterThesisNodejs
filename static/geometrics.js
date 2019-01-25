@@ -99,3 +99,62 @@ class Rectangle extends Square{
         }
     }
 }
+
+class Triangle extends Shape{
+    constructor(id,x,y,x2,y2,x3,y3){
+        super(id,x,y);
+        this.x2 = x2;
+        this.y2 = y2;
+        this.x3 = x3;
+        this.y3 = y3;
+    }
+
+    draw(context){
+        context.beginPath();
+        context.moveTo(this.x,this.y);
+        context.lineTo(this.x2,this.y2);
+        context.lineTo(this.x3,this.y3);
+        context.closePath();
+        context.stroke();
+    }
+
+    getCollisionArea(e){
+        //Heron's formula is used for this
+        var area1 = Math.abs((this.x-e.x)*(this.y2-e.y)-(this.x2-e.x)*(this.y-e.y));
+        var area3 = Math.abs((this.x2-e.x)*(this.y3-e.y)-(this.x3-e.x)*(this.y2-e.y));
+        var area2 = Math.abs((this.x3-e.x)*(this.y-e.y)-(this.x-e.x)*(this.y3-e.y));
+        if(area1+area2+area3 == this.area()){
+            this.colliding = true;
+        } else {
+            this.colliding = false;
+        }
+        console.log(this.colliding);
+        return this.colliding;
+    }
+    
+
+    area(){
+        return Math.abs((this.x2-this.x)*(this.y3-this.y)-(this.x3-this.x)*(this.y2-this.y));
+    }
+
+    distanceX(p1,p2){
+        //temporary
+        return p1.x - p2.x - 20;
+    }
+
+    distanceY(p1,p2){
+        //temporary
+        return p1.y - p2.y - 40;
+    }
+
+    move(e){
+        var point = {x: this.x, y: this.y};
+
+        this.x = this.x + this.distanceX(e,point);
+        this.x2 = this.x2 + this.distanceX(e,point);
+        this.x3 = this.x3 + this.distanceX(e,point);  
+        this.y = this.y + this.distanceY(e,point);
+        this.y2 = this.y2 + this.distanceY(e,point);
+        this.y3 = this.y3 + this.distanceY(e,point);
+    }
+}

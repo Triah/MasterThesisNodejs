@@ -31,7 +31,9 @@ function createObjects(list){
       canvasObjects[i] = new FilledRectangle(list[i].id,list[i].x, list[i].y, list[i].w, list[i].h, list[i].fill, list[i].text, list[i].textColor);
     } else if(list[i].type == "Circle"){
       canvasObjects[i] = new Circle(list[i].id,list[i].x,list[i].y,list[i].r);
-    }
+    } else if(list[i].type == "Triangle"){
+      canvasObjects[i] = new Triangle(list[i].id, list[i].x, list[i].y,list[i].x2, list[i].y2,list[i].x3, list[i].y3);
+    } 
   }
 }
 
@@ -63,6 +65,7 @@ canvas.onmousedown = function(e){
 canvas.onmousemove = function(e){
   if(itemIsLocked && lockedItem != null){
     lockedItem.move(e);
+    console.log(lockedItem)
     context.clearRect(0,0,canvas.width,canvas.height);
     for(var i = 0; i<canvasObjects.length;i++){
       canvasObjects[i].draw(context);
@@ -81,9 +84,9 @@ canvas.onmouseup = function(e){
 }
 
 socket.on('updateItemPositionDone', function(lockedItem){
-  console.log("hej");
-  canvasObjects[lockedItem.id].x = lockedItem.x;
-  canvasObjects[lockedItem.id].y = lockedItem.y;
+  for(var updateDone in lockedItem){
+    canvasObjects[lockedItem.id][updateDone] = lockedItem[updateDone];
+  }
   context.clearRect(0,0,canvas.width,canvas.height);
   for(var i = 0; i<canvasObjects.length;i++){
     canvasObjects[i].draw(context);
