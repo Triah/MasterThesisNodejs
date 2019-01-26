@@ -49,7 +49,7 @@ var canvasObjects = {}
 canvasObjects[0] = {id: 0, type: "Rectangle", x: 10, y:10, w: 100, h: 100};
 canvasObjects[1] = {id: 1, type: "FilledRectangle", x: 200, y:10, w:150, h:150};
 canvasObjects[2] = {id: 2, type: "Circle", x: 50, y: 170, r: 50};
-canvasObjects[3] = {id: 3, type: "Triangle", x:300, y:300, x2:350, y2: 300, x3: 280, y3:400};
+canvasObjects[3] = {id: 3, type: "Triangle", x:300, y:300, x2:700, y2: 300, x3: 325, y3:600};
 
 //Create rooms for the players to enter dynamically with a recursive method
 //mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");

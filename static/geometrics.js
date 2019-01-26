@@ -139,22 +139,30 @@ class Triangle extends Shape{
 
     distanceX(p1,p2){
         //temporary
-        return p1.x - p2.x - 20;
+        return p1.x - p2.x;
     }
 
     distanceY(p1,p2){
         //temporary
-        return p1.y - p2.y - 40;
+        return p1.y - p2.y;
+    }
+
+    getCenter(p1,p2,p3){
+        var centerX = (p1.x + p2.x + p3.x)/3;
+        var centerY = (p1.y + p2.y + p3.y)/3;
+        var centerPoint = {x:centerX, y: centerY};
+        return centerPoint;
     }
 
     move(e){
         var point = {x: this.x, y: this.y};
-
-        this.x = this.x + this.distanceX(e,point);
-        this.x2 = this.x2 + this.distanceX(e,point);
-        this.x3 = this.x3 + this.distanceX(e,point);  
-        this.y = this.y + this.distanceY(e,point);
-        this.y2 = this.y2 + this.distanceY(e,point);
-        this.y3 = this.y3 + this.distanceY(e,point);
+        var point2 = {x: this.x2, y: this.y2};
+        var point3 = {x: this.x3, y: this.y3};
+        this.x = this.x + this.distanceX(e,this.getCenter(point,point2,point3));
+        this.x2 = this.x2 + this.distanceX(e,this.getCenter(point,point2,point3));
+        this.x3 = this.x3 + this.distanceX(e,this.getCenter(point,point2,point3));  
+        this.y = this.y + this.distanceY(e,this.getCenter(point,point2,point3));
+        this.y2 = this.y2 + this.distanceY(e,this.getCenter(point,point2,point3));
+        this.y3 = this.y3 + this.distanceY(e,this.getCenter(point,point2,point3));
     }
 }
