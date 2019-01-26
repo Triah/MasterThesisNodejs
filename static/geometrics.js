@@ -61,7 +61,9 @@ class Circle extends Shape{
     draw(context){
         context.beginPath();
         context.arc(this.x,this.y,this.r,0,2*Math.PI, false);
+        context.strokeStyle = "#000000"
         context.stroke();
+        context.closePath();
     }
 }
 
@@ -92,6 +94,7 @@ class Rectangle extends Square{
 
     draw(context){
         context.beginPath();
+        context.strokeStyle = "#000000"
         context.strokeRect(this.x,this.y,this.w,this.h);
         if(this.text != undefined){
             context.textAlign = "center";
@@ -114,6 +117,7 @@ class Triangle extends Shape{
         context.moveTo(this.x,this.y);
         context.lineTo(this.x2,this.y2);
         context.lineTo(this.x3,this.y3);
+        context.strokeStyle = "#000000"
         context.closePath();
         context.stroke();
     }

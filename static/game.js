@@ -12,7 +12,7 @@ function canvasUpdated(){
 }
 
 var canvasObjects = [];
-
+let canvasGrid = new Grid(20,20);
 var draggable = false;
 
 socket.emit('new player');
@@ -20,9 +20,12 @@ socket.emit('new player');
 socket.on('new player in room', function(user, room){
   //add user to list based on room
 });
+
 /*
 socket on get json object that defines what should be on the canvas
 */
+//Grid
+//Objects
 function createObjects(list){
   for(let i in list){
     if(list[i].type == "Rectangle") {
@@ -39,6 +42,7 @@ function createObjects(list){
 
 socket.on("initObjects", function(objectList){
   createObjects(objectList);
+  canvasGrid.display(canvas, context);
 });
 
 
@@ -65,8 +69,8 @@ canvas.onmousedown = function(e){
 canvas.onmousemove = function(e){
   if(itemIsLocked && lockedItem != null){
     lockedItem.move(e);
-    console.log(lockedItem)
     context.clearRect(0,0,canvas.width,canvas.height);
+    canvasGrid.display(canvas,context);
     for(var i = 0; i<canvasObjects.length;i++){
       canvasObjects[i].draw(context);
     }
@@ -88,6 +92,7 @@ socket.on('updateItemPositionDone', function(lockedItem){
     canvasObjects[lockedItem.id][updateDone] = lockedItem[updateDone];
   }
   context.clearRect(0,0,canvas.width,canvas.height);
+  canvasGrid.display(canvas,context);
   for(var i = 0; i<canvasObjects.length;i++){
     canvasObjects[i].draw(context);
   }
