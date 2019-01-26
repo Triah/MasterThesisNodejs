@@ -1,4 +1,5 @@
 
+//I need to get the bounds of the shapes
 class Shape{
     constructor(id, x,y){
         this.id = id;
@@ -35,6 +36,15 @@ class Square extends Shape{
     area(){
         return w*h;
     }
+
+    getBounds(){
+        var bounds = [];
+        bounds.push({x:this.x , y:this.y});
+        bounds.push({x:this.x + this.w , y:this.y});
+        bounds.push({x:this.x , y:this.y + this.h});
+        bounds.push({x:this.x + this.w, y:this.y + this.h});
+        return bounds;
+    }
 }
 
 class Circle extends Shape{
@@ -51,6 +61,16 @@ class Circle extends Shape{
             this.colliding = false;
         }
         return this.colliding;
+    }
+
+    getBounds(){
+        //this gets the bounding rectangle for now
+        var bounds = []
+        bounds.push({x: this.x-this.r, y:this.y-this.r}); //upper left corner
+        bounds.push({x:this.x+this.r, y:this.y-this.r}); //upper right corner
+        bounds.push({x:this.x-this.r, y:this.y+this.r}); //lower left cornor
+        bounds.push({x:this.x+this.r, y:this.y+this.r}); //lower right cornor
+        return bounds;
     }
 
     move(e){
@@ -132,7 +152,6 @@ class Triangle extends Shape{
         } else {
             this.colliding = false;
         }
-        console.log(this.colliding);
         return this.colliding;
     }
     
@@ -156,6 +175,14 @@ class Triangle extends Shape{
         var centerY = (p1.y + p2.y + p3.y)/3;
         var centerPoint = {x:centerX, y: centerY};
         return centerPoint;
+    }
+
+    getBounds(){
+        var bounds = [];
+        bounds.push({x: this.x, y: this.y})
+        bounds.push({x: this.x2, y: this.y2})
+        bounds.push({x: this.x3, y: this.y3})
+        return bounds;
     }
 
     move(e){
