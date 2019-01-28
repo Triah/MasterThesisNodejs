@@ -28,9 +28,10 @@ class Square extends Shape{
         return this.colliding
     }
 
-    move(e){
-        this.x = e.x - 10 - this.w/2;
-        this.y = e.y - 10 - this.h/2;
+    move(canvas,e){
+        var rect = canvas.getBoundingClientRect();
+        this.x = e.x - rect.left - this.w/2;
+        this.y = e.y - rect.top - this.h/2;
     }
 
     area(){
@@ -73,15 +74,18 @@ class Circle extends Shape{
         return bounds;
     }
 
-    move(e){
-        this.x = e.x - 10;
-        this.y = e.y - 10;
+    move(canvas,e){
+        var rect = canvas.getBoundingClientRect();
+        this.x = e.x - rect.left;
+        this.y = e.y - rect.top;
     }
 
     draw(context){
         context.beginPath();
         context.arc(this.x,this.y,this.r,0,2*Math.PI, false);
-        context.strokeStyle = "#000000"
+        context.strokeStyle = "#000000";
+        context.moveTo(this.x,this.y);
+        context.lineTo(this.x+10,this.y+10);
         context.stroke();
         context.closePath();
     }
@@ -147,7 +151,7 @@ class Triangle extends Shape{
         var area1 = Math.abs((this.x-e.x)*(this.y2-e.y)-(this.x2-e.x)*(this.y-e.y));
         var area3 = Math.abs((this.x2-e.x)*(this.y3-e.y)-(this.x3-e.x)*(this.y2-e.y));
         var area2 = Math.abs((this.x3-e.x)*(this.y-e.y)-(this.x-e.x)*(this.y3-e.y));
-        if(area1+area2+area3 == this.area()){
+        if(Math.floor(area1+area2+area3) == Math.floor(this.area())){
             this.colliding = true;
         } else {
             this.colliding = false;
@@ -160,14 +164,14 @@ class Triangle extends Shape{
         return Math.abs((this.x2-this.x)*(this.y3-this.y)-(this.x3-this.x)*(this.y2-this.y));
     }
 
-    distanceX(p1,p2){
+    distanceX(p1,p2,canvas){
         //temporary
-        return p1.x - p2.x;
+        return (p1.x -canvas.getBoundingClientRect().left) - p2.x;
     }
 
-    distanceY(p1,p2){
+    distanceY(p1,p2,canvas){
         //temporary
-        return p1.y - p2.y;
+        return (p1.y - canvas.getBoundingClientRect().top) - p2.y;
     }
 
     getCenter(p1,p2,p3){
@@ -185,15 +189,16 @@ class Triangle extends Shape{
         return bounds;
     }
 
-    move(e){
+    move(canvas,e){
+        
         var point = {x: this.x, y: this.y};
         var point2 = {x: this.x2, y: this.y2};
         var point3 = {x: this.x3, y: this.y3};
-        this.x = this.x + this.distanceX(e,this.getCenter(point,point2,point3));
-        this.x2 = this.x2 + this.distanceX(e,this.getCenter(point,point2,point3));
-        this.x3 = this.x3 + this.distanceX(e,this.getCenter(point,point2,point3));  
-        this.y = this.y + this.distanceY(e,this.getCenter(point,point2,point3));
-        this.y2 = this.y2 + this.distanceY(e,this.getCenter(point,point2,point3));
-        this.y3 = this.y3 + this.distanceY(e,this.getCenter(point,point2,point3));
+        this.x = this.x + this.distanceX(e,this.getCenter(point,point2,point3),canvas);
+        this.x2 = this.x2 + this.distanceX(e,this.getCenter(point,point2,point3),canvas);
+        this.x3 = this.x3 + this.distanceX(e,this.getCenter(point,point2,point3),canvas);  
+        this.y = this.y + this.distanceY(e,this.getCenter(point,point2,point3),canvas);
+        this.y2 = this.y2 + this.distanceY(e,this.getCenter(point,point2,point3),canvas);
+        this.y3 = this.y3 + this.distanceY(e,this.getCenter(point,point2,point3),canvas);
     }
 }
