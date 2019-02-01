@@ -69,6 +69,7 @@ canvas.onmousedown = function(e){
 canvas.onmousemove = function(e){
   if(itemIsLocked && lockedItem != null){
     lockedItem.move(canvas,e);
+    lockedItem.isCollidingWithOtherObject(canvasObjects);
     context.clearRect(0,0,canvas.width,canvas.height);
     canvasGrid.display(canvas,context);
     for(var i = 0; i<canvasObjects.length;i++){
