@@ -1,4 +1,3 @@
-
 //I need to get the bounds of the shapes
 class Shape {
     constructor(id, x, y) {
@@ -7,16 +6,61 @@ class Shape {
         this.y = y;
         this.colliding = false;
     }
+
+
+
     isCollidingWithOtherObject(objects) {
         //This triple for loop is painful but neccessary sadly
         //will try to think of a more efficient way to do this
         //potentially do the actions multithreadded as to not slow down the application too much
+       /* objects.forEach(obj => {
+            if (obj != this) {
+                var areas = [];
+                var allBoundsForPoint = [];
+                for (var i = 0; i < obj.getBounds().length; i++) {
+                    var allBoundsForPoint = [];
+                    //Functioning as intended
+                    for (var j = 0; j < this.getBounds().length; j++) {
+                        var bounds = [];
+                        bounds.push({ x: this.getBounds()[j].x, y: this.getBounds()[j].y });
+                        if (j != this.getBounds().length - 1) {
+                            bounds.push({ x: this.getBounds()[j + 1].x, y: this.getBounds()[j + 1].y })
+                        } else {
+                            bounds.push({ x: this.getBounds()[0].x, y: this.getBounds()[0].y });
+                        }
+                        bounds.push({ x: obj.getBounds()[i].x, y: obj.getBounds()[i].y });
+                        allBoundsForPoint.push(bounds);
+                    }
+
+                    //calculate the lengths of the sides
+                    var sideLengths = this.calcSideLengths(allBoundsForPoint);
+
+                    //functioning as intended
+                    var sValues = this.calcSValue(sideLengths);
+
+                    //calculating areas
+                    areas.push(this.calcTemporaryAreaValues(sValues, sideLengths));
+
+                    //For each of the triangles combine the areas
+                    var totalAreas = this.calcArea(areas);
+
+                    totalAreas.forEach(totalArea => {
+                        //console.log(totalArea);
+                        if (Math.floor(totalArea) == Math.floor(this.area())) {
+                            console.log("colliding");
+                        }
+                    });
+                    //Success boii though i need to optimize this later
+                }
+            }
+        });
+
         objects.forEach(obj => {
             if (obj != this) {
                 var areas = [];
+                var allBoundsForPoint = [];
                 for (var i = 0; i < this.getBounds().length; i++) {
                     var allBoundsForPoint = [];
-                    var sideLengths = [];
                     //Functioning as intended
                     for (var j = 0; j < obj.getBounds().length; j++) {
                         var bounds = [];
@@ -27,80 +71,193 @@ class Shape {
                             bounds.push({ x: obj.getBounds()[0].x, y: obj.getBounds()[0].y });
                         }
                         bounds.push({ x: this.getBounds()[i].x, y: this.getBounds()[i].y });
-
                         allBoundsForPoint.push(bounds);
-
                     }
 
-                    //slow as a snail running a race with usain bolt but it works as intended
-                    for (var k = 0; k < allBoundsForPoint.length; k++) {
-                        var lengthsOfEachTriangle = [];
-                        for (var b = 0; b < allBoundsForPoint[k].length; b++) {
-                            if (b != allBoundsForPoint[k].length - 1) {
-                                var vector = { x1: allBoundsForPoint[k][b].x, y1: allBoundsForPoint[k][b].y, x2: allBoundsForPoint[k][b + 1].x, y2: allBoundsForPoint[k][b + 1].y };
-                            } else {
-                                var vector = { x1: allBoundsForPoint[k][b].x, y1: allBoundsForPoint[k][b].y, x2: allBoundsForPoint[k][0].x, y2: allBoundsForPoint[k][0].y };
-                            }
-                            var lengthx = vector.x2 - vector.x1;
-                            var lengthy = vector.y2 - vector.y1;
-                            var length = Math.sqrt(Math.pow(lengthx, 2) + Math.pow(lengthy, 2));
-                            lengthsOfEachTriangle.push(length);
-                        }
-                        sideLengths.push(lengthsOfEachTriangle);
-                    }
+                    //calculate the lengths of the sides
+                    var sideLengths = this.calcSideLengths(allBoundsForPoint);
 
                     //functioning as intended
-                    var sValues = []
-                    for (var k = 0; k < sideLengths.length; k++) {
-                        var s = 0;
-                        for (var b = 0; b < sideLengths[k].length; b++) {
-                            s += sideLengths[k][b];
-                        }
-                        s = s / 2;
-                        sValues.push(s);
-                    }
+                    var sValues = this.calcSValue(sideLengths);
 
-                    var tempAreaValues = []
-                    for (var k = 0; k < sValues.length; k++) {
-                        var a = 0;
-                        for (var b = 0; b < sideLengths[k].length; b++) {
-                            if (a == 0) {
-                                a = sValues[k] - sideLengths[k][b];
-                            } else {
-                                a *= sValues[k] - sideLengths[k][b];
-                            }
-                        }
-                        tempAreaValues.push(a);
-                    }
+                    //calculating areas
+                    areas.push(this.calcTemporaryAreaValues(sValues, sideLengths));
 
-                    for(var k = 0; k < tempAreaValues.length; k++){
-                        tempAreaValues[k] = sValues[k] * tempAreaValues[k];
-                        tempAreaValues[k] = Math.sqrt(tempAreaValues[k]);
-                    }
-
-                    areas.push(tempAreaValues);
-                    
-                    var totalAreas = []
-                    for(var k = 0; k < areas.length; k++){
-                        var totalArea = 0
-                        for(var b = 0; b < areas[k].length; b++){
-                            totalArea += areas[k][b];
-                        }
-                        totalAreas.push(totalArea);
-                    }
+                    //For each of the triangles combine the areas
+                    var totalAreas = this.calcArea(areas);
 
                     totalAreas.forEach(totalArea => {
-                        if(Math.floor(totalArea) == Math.floor(obj.area())){
-                        console.log("colliding");
+                        //console.log(totalArea);
+                        if (Math.floor(totalArea) == Math.floor(obj.area())) {
+                            console.log("colliding");
                         }
                     });
-                    
+                    //Success boii though i need to optimize this later
+                }
+            }
+        });*/
+        
+        var objectsList = objects;
+        //calculate from other objects to this object
+        this.calcCollisionOtherObjectsToThis(objectsList, this);
+        //invert process to cover all lines and point cases
+        this.calcCollisionThisToOtherObjects(objectsList, this);
+    }
+
+    calcCollisionThisToOtherObjects(objects,self){
+        objects.forEach(obj => {
+            if (obj != self) {
+                var areas = [];
+                var allBoundsForPoint = [];
+                for (var i = 0; i < obj.getBounds().length; i++) {
+                    var allBoundsForPoint = [];
+                    //Functioning as intended
+                    for (var j = 0; j < self.getBounds().length; j++) {
+                        var bounds = [];
+                        bounds.push({ x: self.getBounds()[j].x, y: self.getBounds()[j].y });
+                        if (j != self.getBounds().length - 1) {
+                            bounds.push({ x: self.getBounds()[j + 1].x, y: self.getBounds()[j + 1].y })
+                        } else {
+                            bounds.push({ x: self.getBounds()[0].x, y: self.getBounds()[0].y });
+                        }
+                        bounds.push({ x: obj.getBounds()[i].x, y: obj.getBounds()[i].y });
+                        allBoundsForPoint.push(bounds);
+                    }
+
+                    //calculate the lengths of the sides
+                    var sideLengths = self.calcSideLengths(allBoundsForPoint);
+
+                    //functioning as intended
+                    var sValues = self.calcSValue(sideLengths);
+
+                    //calculating areas
+                    areas.push(self.calcTemporaryAreaValues(sValues, sideLengths));
+
+                    //For each of the triangles combine the areas
+                    var totalAreas = self.calcArea(areas);
+
+                    totalAreas.forEach(totalArea => {
+                        //console.log(totalArea);
+                        if (Math.floor(totalArea) == Math.floor(this.area())) {
+                            console.log("colliding in this to other");
+                        }
+                    });
                     //Success boii though i need to optimize this later
                 }
             }
         });
-
     }
+
+    calcCollisionOtherObjectsToThis(objects,self){
+        objects.forEach(obj => {
+            if (obj != self) {
+                var areas = [];
+                var allBoundsForPoint = [];
+                for (var i = 0; i < self.getBounds().length; i++) {
+                    var allBoundsForPoint = [];
+                    //Functioning as intended
+                    for (var j = 0; j < obj.getBounds().length; j++) {
+                        var bounds = [];
+                        bounds.push({ x: obj.getBounds()[j].x, y: obj.getBounds()[j].y });
+                        if (j != obj.getBounds().length - 1) {
+                            bounds.push({ x: obj.getBounds()[j + 1].x, y: obj.getBounds()[j + 1].y })
+                        } else {
+                            bounds.push({ x: obj.getBounds()[0].x, y: obj.getBounds()[0].y });
+                        }
+                        bounds.push({ x: self.getBounds()[i].x, y: self.getBounds()[i].y });
+                        allBoundsForPoint.push(bounds);
+                    }
+
+                    //calculate the lengths of the sides
+                    var sideLengths = self.calcSideLengths(allBoundsForPoint);
+
+                    //functioning as intended
+                    var sValues = self.calcSValue(sideLengths);
+
+                    //calculating areas
+                    areas.push(self.calcTemporaryAreaValues(sValues, sideLengths));
+
+                    //For each of the triangles combine the areas
+                    var totalAreas = self.calcArea(areas);
+
+                    totalAreas.forEach(totalArea => {
+                        //console.log(totalArea);
+                        if (Math.floor(totalArea) == Math.floor(obj.area())) {
+                            console.log("colliding in other to this");
+                        }
+                    });
+                    //Success boii though i need to optimize this later
+                }
+            }
+        });
+    }
+
+    calcSideLengths(allBoundsForPoint) {
+        var sideLengths = []
+        for (var k = 0; k < allBoundsForPoint.length; k++) {
+            var lengthsOfEachTriangle = [];
+            for (var b = 0; b < allBoundsForPoint[k].length; b++) {
+                if (b != allBoundsForPoint[k].length - 1) {
+                    var vector = { x1: allBoundsForPoint[k][b].x, y1: allBoundsForPoint[k][b].y, x2: allBoundsForPoint[k][b + 1].x, y2: allBoundsForPoint[k][b + 1].y };
+                } else {
+                    var vector = { x1: allBoundsForPoint[k][b].x, y1: allBoundsForPoint[k][b].y, x2: allBoundsForPoint[k][0].x, y2: allBoundsForPoint[k][0].y };
+                }
+                var lengthx = vector.x2 - vector.x1;
+                var lengthy = vector.y2 - vector.y1;
+                var length = Math.sqrt(Math.pow(lengthx, 2) + Math.pow(lengthy, 2));
+                lengthsOfEachTriangle.push(length);
+            }
+            sideLengths.push(lengthsOfEachTriangle);
+        }
+        return sideLengths;
+    }
+
+    calcArea(tempAreaValues) {
+        var totalAreas = []
+        for (var k = 0; k < tempAreaValues.length; k++) {
+            var totalArea = 0
+            for (var b = 0; b < tempAreaValues[k].length; b++) {
+                totalArea += tempAreaValues[k][b];
+            }
+            totalAreas.push(totalArea);
+        }
+        return totalAreas;
+    }
+
+    calcTemporaryAreaValues(sValues, sideLengths) {
+        var tempAreaValues = []
+        for (var k = 0; k < sValues.length; k++) {
+            var a = 0;
+            for (var b = 0; b < sideLengths[k].length; b++) {
+                if (a == 0) {
+                    a = sValues[k] - sideLengths[k][b];
+                } else {
+                    a *= sValues[k] - sideLengths[k][b];
+                }
+            }
+            tempAreaValues.push(a);
+        }
+
+        for (var k = 0; k < tempAreaValues.length; k++) {
+            tempAreaValues[k] = sValues[k] * tempAreaValues[k];
+            tempAreaValues[k] = Math.sqrt(tempAreaValues[k]);
+        }
+        return tempAreaValues;
+    }
+
+    calcSValue(sideLengthsArray) {
+        var sValues = []
+        for (var k = 0; k < sideLengthsArray.length; k++) {
+            var s = 0;
+            for (var b = 0; b < sideLengthsArray[k].length; b++) {
+                s += sideLengthsArray[k][b];
+            }
+            s = s / 2;
+            sValues.push(s);
+        }
+        return sValues;
+    }
+
     getBounds(objects) { }
     getVectors() { }
 }
@@ -187,7 +344,7 @@ class Circle extends Shape {
         bounds.push({ x: this.x + this.r, y: this.y - this.r }); //upper right corner
         bounds.push({ x: this.x + this.r, y: this.y + this.r }); //lower right cornor 
         bounds.push({ x: this.x - this.r, y: this.y + this.r }); //lower left cornor
-        
+
         return bounds;
     }
 
@@ -204,8 +361,8 @@ class Circle extends Shape {
         context.stroke();
         context.closePath();
     }
-    area(){
-        return (this.getBounds()[1].x-this.getBounds()[0].x) * (this.getBounds()[2].y-this.getBounds()[1].y);
+    area() {
+        return (this.getBounds()[1].x - this.getBounds()[0].x) * (this.getBounds()[2].y - this.getBounds()[1].y);
     }
 }
 
