@@ -7,14 +7,11 @@ class Shape {
         this.colliding = false;
     }
 
-
-
     isCollidingWithOtherObject(objects) {
-        var objectsList = objects;
         //calculate from other objects to this object
-        this.calcCollisionOtherObjectsToThis(objectsList, this);
+        this.calcCollisionOtherObjectsToThis(objects, this);
         //invert process to cover all lines and point cases
-        this.calcCollisionThisToOtherObjects(objectsList, this);
+        this.calcCollisionThisToOtherObjects(objects, this);
     }
 
     calcCollisionThisToOtherObjects(objects,self){
@@ -49,13 +46,13 @@ class Shape {
                     //For each of the triangles combine the areas
                     var totalAreas = self.calcArea(areas);
 
-                    totalAreas.forEach(totalArea => {
-                        //console.log(totalArea);
-                        if (Math.floor(totalArea) == Math.floor(this.area())) {
-                            console.log("colliding in this to other");
+                    for(var k = 0; k < totalAreas.length; k++){
+                        if (Math.floor(totalAreas[k]) == Math.floor(self.area())) {
+                            console.log("colliding in other to this");
+                            console.log(k);
+                            return;
                         }
-                    });
-                    //Success boii though i need to optimize this later
+                    }
                 }
             }
         });
@@ -93,13 +90,13 @@ class Shape {
                     //For each of the triangles combine the areas
                     var totalAreas = self.calcArea(areas);
 
-                    totalAreas.forEach(totalArea => {
-                        //console.log(totalArea);
-                        if (Math.floor(totalArea) == Math.floor(obj.area())) {
-                            console.log("colliding in other to this");
+                    for(var k = 0; k < totalAreas.length; k++){
+                        if (Math.floor(totalAreas[k]) == Math.floor(obj.area())) {
+                            console.log("colliding in this to other");
+                            console.log(k);
+                            return;
                         }
-                    });
-                    //Success boii though i need to optimize this later
+                    }
                 }
             }
         });
