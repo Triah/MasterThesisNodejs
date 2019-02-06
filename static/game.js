@@ -69,7 +69,25 @@ canvas.onmousedown = function(e){
 canvas.onmousemove = function(e){
   if(itemIsLocked && lockedItem != null){
     lockedItem.move(canvas,e);
-    lockedItem.isCollidingWithOtherObject(canvasObjects);
+
+    //Work in progress
+    if(lockedItem.isCollidingWithOtherObject(canvasObjects) != null){
+      var collisionObject = lockedItem.isCollidingWithOtherObject(canvasObjects);
+      for(var vector in lockedItem.getVectors()){
+        if(collisionObject.firstObj == lockedItem){
+          //Get the distance from point 1 and 2 in the vector to the corner
+          //now get the distance of the entire vector and minus the two to see if they are equal to 0
+          //if they are equal to 0 and collision is happening i can stop moving the shape i suppose
+          //this makes me unable to move the shape into the other but allows me to move it away from it
+          var collisionPointX = collisionObject.secondObj.getBounds()[collisionObject.cornerForCollision].x
+          var collisionPointY = collisionObject.secondObj.getBounds()[collisionObject.cornerForCollision].y;
+          
+        } else if(collisionObject.firstObj != lockedItem){
+          //console.log(collisionObject.secondObj);
+        }
+      }
+    }
+    
     context.clearRect(0,0,canvas.width,canvas.height);
     canvasGrid.display(canvas,context);
     for(var i = 0; i<canvasObjects.length;i++){

@@ -8,13 +8,19 @@ class Shape {
     }
 
     isCollidingWithOtherObject(objects) {
-        //calculate from other objects to this object
-        this.calcCollisionOtherObjectsToThis(objects, this);
-        //invert process to cover all lines and point cases
-        this.calcCollisionThisToOtherObjects(objects, this);
+        var collision = null;
+        if(this.calcCollisionOtherObjectsToThis(objects, this) != null){
+            //calculate from other objects to this object
+            collision = this.calcCollisionOtherObjectsToThis(objects, this);
+        } else if (this.calcCollisionThisToOtherObjects(objects, this) != null){
+            //invert process to cover all lines and point cases
+            collision = this.calcCollisionThisToOtherObjects(objects, this);
+        }
+        return collision;
     }
 
     calcCollisionThisToOtherObjects(objects,self){
+        var collision = null;
         objects.forEach(obj => {
             if (obj != self) {
                 var areas = [];
@@ -48,17 +54,17 @@ class Shape {
 
                     for(var k = 0; k < totalAreas.length; k++){
                         if (Math.floor(totalAreas[k]) == Math.floor(self.area())) {
-                            console.log("colliding in other to this");
-                            console.log(k);
-                            return;
+                            collision = {firstObj: self, secondObj: obj, cornerForCollision: k};
                         }
                     }
                 }
             }
         });
+        return collision;
     }
 
     calcCollisionOtherObjectsToThis(objects,self){
+        var collision = null;
         objects.forEach(obj => {
             if (obj != self) {
                 var areas = [];
@@ -92,14 +98,13 @@ class Shape {
 
                     for(var k = 0; k < totalAreas.length; k++){
                         if (Math.floor(totalAreas[k]) == Math.floor(obj.area())) {
-                            console.log("colliding in this to other");
-                            console.log(k);
-                            return;
+                            collision = {firstObj: obj, secondObj: self, cornerForCollision: k};
                         }
                     }
                 }
             }
         });
+        return collision;
     }
 
     calcSideLengths(allBoundsForPoint) {
@@ -169,7 +174,25 @@ class Shape {
     }
 
     getBounds(objects) { }
-    getVectors() { }
+    getVectors() { 
+        var vectors = []
+        for (var i = 0; i < this.getBounds().length; i++) {
+            if (i != this.getBounds().length - 1) {
+                var x1 = this.getBounds()[i].x;
+                var y1 = this.getBounds()[i].y;
+                var x2 = this.getBounds()[i + 1].x;
+                var y2 = this.getBounds()[i + 1].y;
+            } else {
+                var x1 = this.getBounds()[i].x;
+                var y1 = this.getBounds()[i].y;
+                var x2 = this.getBounds()[0].x;
+                var y2 = this.getBounds()[0].y;
+            }
+            vectors.push({ x1: x1, y1: y1, x2: x2, y2: y2 });
+
+        }
+        return vectors;
+    }
 }
 
 class Square extends Shape {
@@ -210,25 +233,7 @@ class Square extends Shape {
         return bounds;
     }
 
-    getVectors() {
-        var vectors = []
-        for (var i = 0; i < this.getBounds().length; i++) {
-            if (i != this.getBounds().length - 1) {
-                var x1 = this.getBounds()[i].x;
-                var y1 = this.getBounds()[i].y;
-                var x2 = this.getBounds()[i + 1].x;
-                var y2 = this.getBounds()[i + 1].y;
-            } else {
-                var x1 = this.getBounds()[i].x;
-                var y1 = this.getBounds()[i].y;
-                var x2 = this.getBounds()[0].x;
-                var y2 = this.getBounds()[0].y;
-            }
-            vectors.push({ x1: x1, y1: y1, x2: x2, y2: y2 });
-
-        }
-        return vectors;
-    }
+        
 }
 
 class Circle extends Shape {
