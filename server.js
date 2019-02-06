@@ -46,13 +46,8 @@ server.listen(5000, function() {
 //######################################
 var canvasObjects = {}
 
-canvasObjects[0] = {id: 0, type: "Rectangle", x: 10, y:10, w: 100, h: 100};
-canvasObjects[1] = {id: 1, type: "FilledRectangle", x: 200, y:10, w:150, h:150};
-canvasObjects[2] = {id: 2, type: "Circle", x: 50, y: 170, r: 50};
-canvasObjects[3] = {id: 3, type: "Triangle", x:300, y:300, x2:400, y2: 300, x3: 400, y3:400};
-canvasObjects[4] = {id: 4, type: "Triangle", x:300, y:300, x2:200, y2: 300, x3: 200, y3:400};
-canvasObjects[5] = {id: 5, type: "Triangle", x:300, y:600, x2:400, y2: 300, x3: 400, y3:600};
-canvasObjects[6] = {id: 6, type: "Triangle", x:300, y:600, x2:200, y2: 300, x3: 200, y3:600};
+canvasObjects[0] = {id: 0, bounds: [{x:100,y:100},{x:100,y:150},{x:150,y:200}], moveAble: true, collideAble: true, targetAble:true};
+canvasObjects[1] = {id: 1, bounds: [{x:400,y:400},{x:700, y:400}, {x: 700, y:700}, {x:400,y:700}],moveAble:true, collideAble:true, targetAble: true};
 
 //Create rooms for the players to enter dynamically with a recursive method
 //mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
@@ -88,6 +83,7 @@ io.on('connection', function(socket) {
   socket.on('updateItemPosition', function(lockedItem){
     for(let v in canvasObjects){
       if(v == lockedItem.id){
+        console.log(lockedItem);
         for(var update in lockedItem){
           canvasObjects[v][update] = lockedItem[update];
         }

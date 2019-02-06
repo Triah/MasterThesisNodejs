@@ -1,3 +1,4 @@
+'use strict';
 class Grid {
     constructor(w,h,color){
         this.w = w;
