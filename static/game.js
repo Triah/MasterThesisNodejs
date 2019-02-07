@@ -86,16 +86,42 @@ canvas.onmousemove = function (e) {
         var collisionObject = lockedItem.isCollidingWithOtherObject(canvasObjects);
         for (var vector in lockedItem.getVectors()) {
           if (collisionObject.firstObj == lockedItem) {
-            //Get the distance from point 1 and 2 in the vector to the corner
-            //now get the distance of the entire vector and minus the two to see if they are equal to 0
-            //if they are equal to 0 and collision is happening i can stop moving the shape i suppose
-            //this makes me unable to move the shape into the other but allows me to move it away from it
             var collisionPointX = collisionObject.secondObj.getBounds()[collisionObject.cornerForCollision].x;
             var collisionPointY = collisionObject.secondObj.getBounds()[collisionObject.cornerForCollision].y;
+            var firstVectorX = collisionObject.firstObj.getVectors()[vector].x1;
+            var firstVectorY = collisionObject.firstObj.getVectors()[vector].y1;
+            var secondVectorX = collisionObject.firstObj.getVectors()[vector].x2;
+            var secondVectorY = collisionObject.firstObj.getVectors()[vector].y2;
+
+            //console.log(Math.sqrt(Math.pow(collisionPointX-firstVectorX,2)+Math.pow(collisionPointY - firstVectorY,2))+Math.sqrt(Math.pow(collisionPointX-secondVectorX,2)+Math.pow(collisionPointY - secondVectorY,2)));
+
+            if ((Math.floor(Math.sqrt(Math.pow(collisionPointX - firstVectorX, 2) + Math.pow(collisionPointY - firstVectorY, 2)) +
+              Math.sqrt(Math.pow(collisionPointX - secondVectorX, 2) + Math.pow(collisionPointY - secondVectorY, 2)))) -
+              Math.floor(Math.sqrt(Math.pow(firstVectorX - secondVectorX, 2) + Math.pow(firstVectorY - secondVectorY, 2))) < 10) {
+              console.log(collisionObject.firstObj.getVectors()[vector]);
+            }
+
 
 
           } else if (collisionObject.firstObj != lockedItem) {
-            //console.log(collisionObject.secondObj);
+            try {
+              var collisionPointX = collisionObject.secondObj.getBounds()[collisionObject.cornerForCollision].x;
+              var collisionPointY = collisionObject.secondObj.getBounds()[collisionObject.cornerForCollision].y;
+              var firstVectorX = collisionObject.firstObj.getVectors()[vector].x1;
+              var firstVectorY = collisionObject.firstObj.getVectors()[vector].y1;
+              var secondVectorX = collisionObject.firstObj.getVectors()[vector].x2;
+              var secondVectorY = collisionObject.firstObj.getVectors()[vector].y2;
+
+              if ((Math.floor(Math.sqrt(Math.pow(collisionPointX - firstVectorX, 2) + Math.pow(collisionPointY - firstVectorY, 2)) +
+                Math.sqrt(Math.pow(collisionPointX - secondVectorX, 2) + Math.pow(collisionPointY - secondVectorY, 2)))) -
+                Math.floor(Math.sqrt(Math.pow(firstVectorX - secondVectorX, 2) + Math.pow(firstVectorY - secondVectorY, 2))) < 10) {
+                console.log(collisionPointX - firstVectorX)
+                console.log(collisionObject.firstObj.getVectors()[vector]);
+              }
+            } catch (TypeError) {
+              console.log("Due to insufficient vectors an error was caught");
+            }
+
           }
         }
       }

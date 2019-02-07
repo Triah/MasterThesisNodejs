@@ -83,7 +83,6 @@ io.on('connection', function(socket) {
   socket.on('updateItemPosition', function(lockedItem){
     for(let v in canvasObjects){
       if(v == lockedItem.id){
-        console.log(lockedItem);
         for(var update in lockedItem){
           canvasObjects[v][update] = lockedItem[update];
         }
