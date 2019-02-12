@@ -7,6 +7,7 @@ var socketIO = require('socket.io');
 var app = express();
 var server = http.Server(app);
 var io = socketIO(server);
+
 var cors = require('cors');
 var MongoClient = require('mongodb').MongoClient;
 const dbPath = "mongodb://localhost:27017/";
@@ -25,8 +26,10 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 var username;
+var gameName;
 app.post('/', function(req, res){
   username = req.body.email;
+  gameName = req.body.gameName;
   res.send(res.header);
 });
 
@@ -46,13 +49,18 @@ server.listen(5000, function() {
 //######################################
 var canvasObjects = {}
 
-canvasObjects[0] = {id: 0, bounds: [{x:100,y:100},{x:100,y:150},{x:150,y:200}], moveAble: true, collideAble: true, targetAble:true};
-canvasObjects[1] = {id: 1, bounds: [{x:400,y:400},{x:700, y:400}, {x: 700, y:700}, {x:400,y:700}],moveAble:true, collideAble:true, targetAble: true};
+//canvasObjects[0] = {id: 0, bounds: [{x:100,y:100},{x:100,y:150},{x:150,y:200}], moveAble: true, collideAble: true, targetAble:true};
+//canvasObjects[1] = {id: 1, bounds: [{x:400,y:400},{x:700, y:400}, {x: 700, y:700}, {x:400,y:700}],moveAble:true, collideAble:true, targetAble: true};
 
 //Create rooms for the players to enter dynamically with a recursive method
 //mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
-//mongoDbActions.findAllRooms(MongoClient,dbPath);
+//mongoDbActions.findAllGames(MongoClient,dbPath);
 
+mongoDbActions.getComponentsForGame(MongoClient,dbPath,"Testgame");
+
+
+
+//mongoDbActions.deleteGameEntry(MongoClient, dbPath);
 
 
 //Websocket actions
@@ -63,10 +71,10 @@ io.on('connection', function(socket) {
     if(username != null){
       players[socket.id] = {
       username: username,
-      x: 300,
-      y: 300
+      gameName: gameName
     };
     username = null;
+    gameName = null;
     console.log(players[socket.id]);
     }
     else {
@@ -74,12 +82,12 @@ io.on('connection', function(socket) {
         x:300,
         y:300
       };
+      console.log(canvasObjects);
     }
-    
   });
 
   socket.emit('initObjects', canvasObjects);
-  
+
   socket.on('updateItemPosition', function(lockedItem){
     for(let v in canvasObjects){
       if(v == lockedItem.id){
