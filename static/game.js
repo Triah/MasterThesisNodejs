@@ -48,8 +48,12 @@ function createObjects(list) {
 
 
 socket.on("initObjects", function (objectList) {
+  console.log(objectList[0]);
+  //the entire thing comes out as a string, i can make a string manipulation function fixing it probably
+  
+  
   createObjects(objectList);
-  console.log(canvasObjects)
+  //console.log(canvasObjects)
   canvasGrid.display(canvas, context);
 });
 

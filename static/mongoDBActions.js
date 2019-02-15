@@ -33,8 +33,6 @@ exports.createRoom = function (client, path, roomname, capacity, users) {
     });
 };
 
-
-
 exports.findAllGames = function (client, path) {
     client.connect(path, function (err, db) {
         if (err) throw err;
@@ -75,7 +73,6 @@ exports.getComponentsForGame = function (client, path, name, callback) {
         });
     });
 }*/
-
 
 //in this method, gameroom is the name of the room
 //user is a string representing the username

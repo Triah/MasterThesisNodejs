@@ -52,21 +52,7 @@ var canvasObjects = {}
 //canvasObjects[0] = {id: 0, bounds: [{x:100,y:100},{x:100,y:150},{x:150,y:200}], moveAble: true, collideAble: true, targetAble:true};
 //canvasObjects[1] = {id: 1, bounds: [{x:400,y:400},{x:700, y:400}, {x: 700, y:700}, {x:400,y:700}],moveAble:true, collideAble:true, targetAble: true};
 
-//Create rooms for the players to enter dynamically with a recursive method
-//mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
-//mongoDbActions.findAllGames(MongoClient,dbPath);
 
-/*
-function promiseTest(){
-  MongoClient.connect(dbPath).then(function(db){
-    db.db("MasterThesisMongoDb").collection("Games").findOne({}, function(err, data){
-      canvasObjects[0] = data.Components;
-    })
-    
-  })
-  .catch(function(err){})
-}
-*/
 function initCanvasObjects(name, callback) {
   mongoDbActions.getComponentsForGame(MongoClient, dbPath, name, function (err, result) {
     if (err != null) {
@@ -81,10 +67,6 @@ function initCanvasObjects(name, callback) {
 }
 
 
-
-//mongoDbActions.deleteGameEntry(MongoClient, dbPath);
-
-
 //Websocket actions
 var players = {};
 io.on('connection', function (socket) {
@@ -95,6 +77,13 @@ io.on('connection', function (socket) {
         username: username,
         gameName: gameName
       };
+      initCanvasObjects(gameName, function(err, canvasObjectsVar){
+        if(err != null){}
+        else{
+          console.log("printing canvas obj var: " + canvasObjectsVar[0]);
+          socket.emit('initObjects', canvasObjectsVar);
+        }
+      });
       username = null;
       gameName = null;
       console.log(players[socket.id]);
