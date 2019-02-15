@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 
 var username;
 var gameName;
-app.post('/', function(req, res){
+app.post('/', function (req, res) {
   username = req.body.email;
   gameName = req.body.gameName;
   res.send(res.header);
@@ -37,12 +37,12 @@ app.set('port', 5000);
 app.use('/static', express.static(__dirname + '/static'));
 // Routing
 
-app.get('/', function(request, response) {
+app.get('/', function (request, response) {
   response.sendFile(path.join(__dirname, 'static/index.html'));
 });
 
 // Starts the server.
-server.listen(5000, function() {
+server.listen(5000, function () {
   console.log('Starting server on port 5000');
 });
 
@@ -56,7 +56,29 @@ var canvasObjects = {}
 //mongoDbActions.createRoom(MongoClient, dbPath, "TestRoom2");
 //mongoDbActions.findAllGames(MongoClient,dbPath);
 
-mongoDbActions.getComponentsForGame(MongoClient,dbPath,"Testgame");
+/*
+function promiseTest(){
+  MongoClient.connect(dbPath).then(function(db){
+    db.db("MasterThesisMongoDb").collection("Games").findOne({}, function(err, data){
+      canvasObjects[0] = data.Components;
+    })
+    
+  })
+  .catch(function(err){})
+}
+*/
+function initCanvasObjects(name, callback) {
+  mongoDbActions.getComponentsForGame(MongoClient, dbPath, name, function (err, result) {
+    if (err != null) {
+      console.log(err);
+      callback(err, null);
+    } else {
+      canvasObjects[0] = result[0].Components;
+      callback(null, canvasObjects);
+    }
+
+  });
+}
 
 
 
@@ -65,33 +87,40 @@ mongoDbActions.getComponentsForGame(MongoClient,dbPath,"Testgame");
 
 //Websocket actions
 var players = {};
-io.on('connection', function(socket) {
-  socket.on('new player', function() {
+io.on('connection', function (socket) {
+  socket.on('new player', function () {
     //TODO: check for rooms that are available given the gameinfo
-    if(username != null){
+    if (username != null) {
       players[socket.id] = {
-      username: username,
-      gameName: gameName
-    };
-    username = null;
-    gameName = null;
-    console.log(players[socket.id]);
+        username: username,
+        gameName: gameName
+      };
+      username = null;
+      gameName = null;
+      console.log(players[socket.id]);
     }
     else {
       players[socket.id] = {
-        x:300,
-        y:300
+        x: 300,
+        y: 300
       };
-      console.log(canvasObjects);
+      initCanvasObjects("TestGame", function(err, canvasObjectsVar){
+        if(err != null){}
+        else{
+          console.log("printing canvas obj var: " + canvasObjectsVar[0]);
+          socket.emit('initObjects', canvasObjectsVar);
+        }
+      });
     }
+    
   });
 
-  socket.emit('initObjects', canvasObjects);
+  
 
-  socket.on('updateItemPosition', function(lockedItem){
-    for(let v in canvasObjects){
-      if(v == lockedItem.id){
-        for(var update in lockedItem){
+  socket.on('updateItemPosition', function (lockedItem) {
+    for (let v in canvasObjects) {
+      if (v == lockedItem.id) {
+        for (var update in lockedItem) {
           canvasObjects[v][update] = lockedItem[update];
         }
         io.sockets.emit('updateItemPositionDone', lockedItem);
@@ -99,11 +128,11 @@ io.on('connection', function(socket) {
     }
   });
 
-  socket.on('disconnect', function() {
+  socket.on('disconnect', function () {
     delete players[socket.id]
-  }); 
+  });
 });
 
-setInterval(function() {
+setInterval(function () {
   io.sockets.emit('state', players);
 }, 1000 / 60);

@@ -47,26 +47,20 @@ exports.findAllGames = function (client, path) {
     })
 }
 
-exports.getComponentsForGame = function (client, path, name) {
+exports.getComponentsForGame = function (client, path, name, callback) {
     client.connect(path, function (err, db) {
         if (err) throw err;
         var dbContent = db.db(dbName);
         dbContent.collection("Games").find({}, { projection: { Name: 1, Components: 2 } }).toArray(function (err, result) {
             if (err) throw err;
-            //var JsonBounds = null;
-            //var gameObjects = [];
             for (var i = 0; i < result.length; i++) {
                 if (result[i].Name == name) {
-                    return result;
-                    //       JsonBounds = JSON.parse(result[i].Components);
+                    callback(null,result)
+                    return;
                 }
             }
-            /*for(var i = 0; i < JsonBounds.objects.length; i++){
-                gameObjects[i] = {id: JsonBounds.objects[i].id, bounds: JsonBounds.objects[i].bounds, moveAble:JsonBounds.objects[i].moveAble,collideAble:JsonBounds.objects[i].collideAble, targetAble:JsonBounds.objects[i].targetAble};
-            }
-            console.log(gameObjects[0]);
-            return gameObjects;
-        */})
+            callback("no such entry", null);
+        })
     })
 }
 
