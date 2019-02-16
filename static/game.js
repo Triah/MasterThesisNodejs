@@ -38,6 +38,7 @@ socket on get json object that defines what should be on the canvas
 //Objects
 function createObjects(list) {
   for (let i in list) {
+    console.log(list[i]);
     if (!list[i].collideAble) {
       canvasObjects[i] = new Shape(list[i].id, list[i].bounds, list[i].moveAble, list[i].collideAble, list[i].targetAble);
     } else if (list[i].collideAble) {
@@ -49,30 +50,22 @@ function createObjects(list) {
 
 
 function createJSONfromInitObjects(objectList){
+  var listOfObjects = [];
     for(var i in objectList){
-      var listOfObjects = [];
-      listOfObjects.push(eval('(' + objectList[i] + ')'));
+      listOfObjects.push(eval('(' + objectList[i].Components + ')'));
     }
     return listOfObjects;
 }
 
 
 socket.on("initObjects", function (objectList) {
-  //console.log(objectList);
-  //the entire thing comes out as a string, i can make a string manipulation function fixing it probably
+  console.log(socket);
   var objectsToBeCreated = createJSONfromInitObjects(objectList);
-  
   createObjects(objectsToBeCreated);
-  //console.log(canvasObjects)
   canvasGrid.display(canvas, context);
 });
 
-
-
-/*This needs to be done more clean*/
 canvasUpdated();
-
-//socket.emit('canvasObjects', canvasObjects);
 
 //drag and drop stuff
 var lockedItem = null;

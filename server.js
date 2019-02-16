@@ -59,10 +59,14 @@ function initCanvasObjects(name, callback) {
       console.log(err);
       callback(err, null);
     } else {
-      canvasObjects[0] = result[0].Components;
-      callback(null, canvasObjects);
+      canvasObjects = {};
+      for(var res in result){
+        if(result[res].Name == name){
+          canvasObjects[res] = result[res];
+          callback(null, canvasObjects);
+        }
+      }
     }
-
   });
 }
 
@@ -73,6 +77,7 @@ io.on('connection', function (socket) {
   socket.on('new player', function () {
     //TODO: check for rooms that are available given the gameinfo
     if (username != null) {
+      socket.join(gameName);
       players[socket.id] = {
         username: username,
         gameName: gameName
@@ -80,13 +85,11 @@ io.on('connection', function (socket) {
       initCanvasObjects(gameName, function(err, canvasObjectsVar){
         if(err != null){}
         else{
-          console.log("printing canvas obj var: " + canvasObjectsVar[0]);
           socket.emit('initObjects', canvasObjectsVar);
         }
       });
       username = null;
       gameName = null;
-      console.log(players[socket.id]);
     }
     else {
       players[socket.id] = {
@@ -96,7 +99,6 @@ io.on('connection', function (socket) {
       initCanvasObjects("TestGame", function(err, canvasObjectsVar){
         if(err != null){}
         else{
-          console.log("printing canvas obj var: " + canvasObjectsVar[0]);
           socket.emit('initObjects', canvasObjectsVar);
         }
       });
@@ -104,17 +106,15 @@ io.on('connection', function (socket) {
     
   });
 
-  
-
   socket.on('updateItemPosition', function (lockedItem) {
-    for (let v in canvasObjects) {
-      if (v == lockedItem.id) {
+    for (var v in canvasObjects) {
+      if (JSON.parse(canvasObjects[v].Components).id == lockedItem.id) {
         for (var update in lockedItem) {
           canvasObjects[v][update] = lockedItem[update];
         }
-        io.sockets.emit('updateItemPositionDone', lockedItem);
       }
     }
+    io.to(players[socket.id].gameName).emit('updateItemPositionDone', lockedItem);
   });
 
   socket.on('disconnect', function () {
