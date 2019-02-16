@@ -44,15 +44,25 @@ function createObjects(list) {
       canvasObjects[i] = new CollisionShape(list[i].id, list[i].bounds, list[i].moveAble, list[i].collideAble, list[i].targetAble);
     }
   }
+  canvasUpdated();
+}
+
+
+function createJSONfromInitObjects(objectList){
+    for(var i in objectList){
+      var listOfObjects = [];
+      listOfObjects.push(eval('(' + objectList[i] + ')'));
+    }
+    return listOfObjects;
 }
 
 
 socket.on("initObjects", function (objectList) {
-  console.log(objectList[0]);
+  //console.log(objectList);
   //the entire thing comes out as a string, i can make a string manipulation function fixing it probably
+  var objectsToBeCreated = createJSONfromInitObjects(objectList);
   
-  
-  createObjects(objectList);
+  createObjects(objectsToBeCreated);
   //console.log(canvasObjects)
   canvasGrid.display(canvas, context);
 });
