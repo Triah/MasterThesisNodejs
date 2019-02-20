@@ -47,6 +47,7 @@ exports.addUserToGameRoom = function (client, path, roomname, user, currentUsers
                     //once a match is found we update the list of users in the room
                     dbContent.collection("GameRooms").update({ _id: result[i]._id }, { $set: { users: currentUsers } }, function (err, result) {
                         if (err) throw err;
+                        console.log("user added");
                         db.close();
                     })
                 }
@@ -79,16 +80,27 @@ exports.getUsersInRoom = function (client, path, users, game, callback) {
     })
 }
 
-exports.addGameRoom = function (client, path, game, roomname, capacity, users) {
+exports.addGameRoom = function (client, path, game, roomname, capacity, users, callback) {
     client.connect(path, function (err, db) {
         if (err) throw err;
         var dbContent = db.db(dbName);
+        var newObject = {
+            roomname: roomname,
+            game: game,
+            capacity: capacity,
+            users: users
+        }
         dbContent.collection("GameRooms").insertOne({
             roomname: roomname,
             game: game,
             capacity: capacity,
             users: users
         })
+        if(newObject != null){
+            callback(null,newObject);
+        } else {
+            callback("error adding room", null);
+        }
     })
 }
 
