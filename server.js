@@ -72,8 +72,8 @@ function initCanvasObjects(name, callback) {
 
 
 // This method uses a callback to find the users in a specific room
-function getUsersInRoom(roomname, users,callback){
-  mongoDbActions.getUsersInRoom(MongoClient,dbPath,roomname,users, function(err, result){
+function getUsersInRoom(game, users,callback){
+  mongoDbActions.getUsersInRoom(MongoClient,dbPath,users,game, function(err, result){
     if(err != null){
       callback(err, null);
     } else {
@@ -117,15 +117,33 @@ io.on('connection', function (socket) {
         username: username,
         gameName: gameName
       };
-      var userList = []
 
+      
+      var userList = []
       //Find out how many users are in the room this has an error of not clearing the list currently
-      getUsersInRoom(players[socket.id].gameName + "1",userList, function(err, result){
-        if(err != null){}
+      getUsersInRoom(players[socket.id].gameName,userList, function(err, result){
+        if(err != null){
+          addRoomForGame(String(players[socket.id].gameName+1),players[socket.id].gameName,3,userList);
+        }
         else {
           //get capacity here instead of 3
           //also needs to run through the entire list of possible rooms for the game and check the currently available slots
-          if(userList.length < 3){
+          //console.log(result);
+          for(var i = 0; i < result.length; i++){
+            //console.log(result[i].users)
+            //console.log(i);
+            //console.log(result[i].users);
+            if(result[i].users.length < 3){
+              //console.log("entered if");
+              addUserToRoom(result[i].roomname, players[socket.id].username, result[i].users);
+              break;
+            } else if(result[i].users.length == 3 && i == result.length -1){
+              //console.log("adding a room")
+              //console.log(result[i].users);
+              addRoomForGame(String(result[i].game+(result.length+1)), gameName, 3, userList);
+            }
+          }
+          /*if(userList.length < 3){
             //adds the user to the room that is available
             addUserToRoom(players[socket.id].gameName + "1", "newUser", userList);
             //makes sure the socket joins the room with the same name as the room in mongo
@@ -133,7 +151,7 @@ io.on('connection', function (socket) {
           } else {
             //This needs to make a new room if there are none available
             console.log("too many users in room");
-          }
+          }*/
         }
       });
       
@@ -142,8 +160,8 @@ io.on('connection', function (socket) {
       //addUserToRoom(gameName + "1", "newUser", getUsersInRoom(gameName + "1", userList));
       //getUsersInRoom(gameName + "1",userList);
       //userList.push(players[socket.id].username);
-      //addRoomForGame(gameName + "1", gameName, 3, userList);
-      //getGameRoomsForGame(gameName, null);
+      //addRoomForGame(gameName + "2", gameName, 3, userList);
+      getGameRoomsForGame(gameName, null);
       socket.join(gameName);
       //END OF TESTING METHODS
 
