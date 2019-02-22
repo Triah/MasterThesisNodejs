@@ -60,7 +60,7 @@ exports.getUsersInRoom = function (client, path, users, game, callback) {
     client.connect(path, function (err, db) {
         if (err) throw err;
         var dbContent = db.db(dbName);
-        dbContent.collection("GameRooms").find({}, { projection: { roomname: 1, users: 2, game: 3 } }).toArray(function (err, result) {
+        dbContent.collection("GameRooms").find({}, { projection: { roomname: 1, users: 2, game: 3, capacity: 4 } }).toArray(function (err, result) {
             var roomUsersObject = [];
             for (var i = 0; i < result.length; i++) {
                 if (result[i].game == game) {
@@ -68,7 +68,7 @@ exports.getUsersInRoom = function (client, path, users, game, callback) {
                     result[i].users.forEach(user => {
                         users.push(user);
                     });
-                    roomUsersObject.push({ roomname: result[i].roomname, game: result[i].game, users: users });
+                    roomUsersObject.push({ roomname: result[i].roomname, game: result[i].game, users: users, capacity: result[i].capacity });
                 }
             }
             if (roomUsersObject[0] != undefined) {
@@ -126,12 +126,13 @@ exports.getCurrentRoomsForGame = function (client, path, game, callback) {
 }
 
 
-exports.findAllGames = function (client, path) {
+exports.findAllGames = function (client, path,callback) {
     client.connect(path, function (err, db) {
         if (err) throw err;
         var dbContent = db.db(dbName);
         dbContent.collection("Games").find({}).toArray(function (err, result) {
-            if (err) throw err;
+            if (err) callback(err,null);
+            callback(null,result);
             db.close();
         })
     })
