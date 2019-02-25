@@ -2,7 +2,7 @@
 
 import Shape from '../static/modules/abstract/shape.js';
 import CollisionShape from '../static/modules/abstract/collisionShape.js';
-
+import Square from '../static/modules/shapes/Square.js';
 
 
 var socket = io();
@@ -39,7 +39,9 @@ socket on get json object that defines what should be on the canvas
 function createObjects(list) {
   for (let i in list) {
     console.log(list[i]);
-    if (!list[i].collideAble) {
+    if(!list[i].collideAble && list[i].bounds.length == 4){
+      canvasObjects[i] = new Square(list[i].id, list[i].bounds, list[i].moveAble, list[i].collideAble, list[i].targetAble);
+    } else if (!list[i].collideAble) {
       canvasObjects[i] = new Shape(list[i].id, list[i].bounds, list[i].moveAble, list[i].collideAble, list[i].targetAble);
     } else if (list[i].collideAble) {
       canvasObjects[i] = new CollisionShape(list[i].id, list[i].bounds, list[i].moveAble, list[i].collideAble, list[i].targetAble);
