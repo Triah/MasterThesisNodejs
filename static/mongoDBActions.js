@@ -1,39 +1,5 @@
 var dbName = "MasterThesisMongoDb";
 
-//ROOM ACTIONS
-//capacity should be an int
-//users is a list of user objects
-//for hvert spil, find spil med spil navn
-/*exports.createRoom = function (client, path, roomname, capacity, users) {
-    var roomexists = false;
-    client.connect(path, function (err, db) {
-        if (err) throw err;
-        var dbContent = db.db(dbName);
-        dbContent.collection("GameRooms").find({}, { projection: { _id: 1 } }).toArray(function (err, result) {
-            if (err) throw err;
-            for (var i = 0; i < result.length; i++) {
-                if (result[i]._id == roomname) {
-                    roomexists = true;
-                    db.close();
-                }
-            }
-            if (!roomexists) {
-                dbContent.collection("GameRooms").insertOne({
-                    _id: roomname,
-                    capacity: capacity,
-                    usersOfRoom: users
-                }, (err, result) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        db.close();
-                    }
-                });
-            }
-        });
-    });
-};*/
-
 exports.addUserToGameRoom = function (client, path, roomname, user, currentUsers) {
     client.connect(path, function (err, db) {
         if (err) throw err;
@@ -155,7 +121,6 @@ exports.getComponentsForGame = function (client, path, name, callback) {
     })
 }
 
-
 //Deletion method, shouldnt be used lightly
 exports.deleteGameRoomsEntry = function (client, path) {
     client.connect(path, function (err, db) {
@@ -167,25 +132,6 @@ exports.deleteGameRoomsEntry = function (client, path) {
         });
     });
 }
-
-//in this method, gameroom is the name of the room
-//user is a string representing the username
-//To use this method properly a recursive algorithm is probably optimal
-
-//LEGACY CODE
-/*exports.addUserToRoom = function (client, path, gameroom, user) {
-    client.connect(path, function (err, db) {
-        if (err) throw err;
-        var dbContent = db.db(dbName);
-        var query = { _id: gameroom };
-        var updatevalue = { $set: { usersOfRoom: user } };
-        dbContent.collection("GameRooms").updateOne(query, updatevalue, function (err, res) {
-            if (err) throw err;
-            console.log(gameroom + " was updated with a new user: " + user);
-            db.close();
-        })
-    })
-}*/
 
 //USER ACTIONS
 exports.insertOneUser = function (client, path, id, username) {
