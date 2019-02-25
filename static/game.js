@@ -89,7 +89,7 @@ canvas.onmousemove = function (e) {
       lockedItem.move(canvas, e);
     }
 
-    //Work in progress
+    //Work in progress not really a priority atm but will need to move this to a modular place (within the objects themselves)
     if (lockedItem.collideAble == true) {
       if (lockedItem.isCollidingWithOtherObject(canvasObjects) != null) {
         var collisionObject = lockedItem.isCollidingWithOtherObject(canvasObjects);
@@ -101,17 +101,11 @@ canvas.onmousemove = function (e) {
             var firstVectorY = collisionObject.firstObj.getVectors()[vector].y1;
             var secondVectorX = collisionObject.firstObj.getVectors()[vector].x2;
             var secondVectorY = collisionObject.firstObj.getVectors()[vector].y2;
-
-            //console.log(Math.sqrt(Math.pow(collisionPointX-firstVectorX,2)+Math.pow(collisionPointY - firstVectorY,2))+Math.sqrt(Math.pow(collisionPointX-secondVectorX,2)+Math.pow(collisionPointY - secondVectorY,2)));
-
             if ((Math.floor(Math.sqrt(Math.pow(collisionPointX - firstVectorX, 2) + Math.pow(collisionPointY - firstVectorY, 2)) +
               Math.sqrt(Math.pow(collisionPointX - secondVectorX, 2) + Math.pow(collisionPointY - secondVectorY, 2)))) -
               Math.floor(Math.sqrt(Math.pow(firstVectorX - secondVectorX, 2) + Math.pow(firstVectorY - secondVectorY, 2))) < 10) {
               console.log(collisionObject.firstObj.getVectors()[vector]);
             }
-
-
-
           } else if (collisionObject.firstObj != lockedItem) {
             try {
               var collisionPointX = collisionObject.secondObj.getBounds()[collisionObject.cornerForCollision].x;
@@ -120,7 +114,6 @@ canvas.onmousemove = function (e) {
               var firstVectorY = collisionObject.firstObj.getVectors()[vector].y1;
               var secondVectorX = collisionObject.firstObj.getVectors()[vector].x2;
               var secondVectorY = collisionObject.firstObj.getVectors()[vector].y2;
-
               if ((Math.floor(Math.sqrt(Math.pow(collisionPointX - firstVectorX, 2) + Math.pow(collisionPointY - firstVectorY, 2)) +
                 Math.sqrt(Math.pow(collisionPointX - secondVectorX, 2) + Math.pow(collisionPointY - secondVectorY, 2)))) -
                 Math.floor(Math.sqrt(Math.pow(firstVectorX - secondVectorX, 2) + Math.pow(firstVectorY - secondVectorY, 2))) < 10) {
