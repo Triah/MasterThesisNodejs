@@ -28,9 +28,18 @@ app.use(bodyParser.json());
 var username;
 var gameName;
 app.post('/', function (req, res) {
-  username = req.body.email;
-  gameName = req.body.gameName;
-  res.send(res.header);
+
+  if(req.body.message == "file_uploaded"){
+    //TODO: CHECK MONGO FOR SCRIPTS AND CREATE ANY FILES THAT DO NOT CURRENTLY EXIST
+    console.log(req.body.message);
+    res.send(res.header);
+  }
+
+  if(req.body.message == "new_player"){
+    username = req.body.email;
+    gameName = req.body.gameName;
+    res.send(res.header);
+  }
 });
 
 app.set('port', 5000);

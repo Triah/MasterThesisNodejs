@@ -17,10 +17,6 @@ function canvasUpdated() {
   canvasUpToDate = false;
 }
 
-
-//module stuff
-
-
 var canvasObjects = [];
 let canvasGrid = new Grid(20, 20);
 var draggable = false;
