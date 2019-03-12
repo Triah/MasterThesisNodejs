@@ -7,6 +7,7 @@ var socketIO = require('socket.io');
 var app = express();
 var server = http.Server(app);
 var io = socketIO(server);
+var fs = require('fs');
 
 var cors = require('cors');
 var MongoClient = require('mongodb').MongoClient;
@@ -27,20 +28,68 @@ app.use(bodyParser.json());
 
 var username;
 var gameName;
+//Handle HttpRequests
 app.post('/', function (req, res) {
 
-  if(req.body.message == "file_uploaded"){
-    //TODO: CHECK MONGO FOR SCRIPTS AND CREATE ANY FILES THAT DO NOT CURRENTLY EXIST
+  if (req.body.message == "file_uploaded") {
+    //String manipulation to get usable path
+    var path = __dirname + "\\static\\modules";
+    var pathParts = path.split("\\");
+    var pathFinal = "";
+    for (var i = 0; i < pathParts.length; i++) {
+      pathFinal += pathParts[i] + "/";
+    }
+
+    //Get directories which exist
+    getSubDirectoriesOrFiles(pathFinal, function (dirs) {
+      //For each dir in dirs i need to check if a category in the mongodb exists that does not exist in this list.
+      getSetOfScriptCategories(function (err, result) {
+        if (err != null) { console.log(err) }
+        else {
+          //remove all dirs that already exist in the solution
+          for (var i = 0; i < result.length; i++) {
+            if (dirs.indexOf(result[i]) != -1) {
+              result.splice(i, 1);
+              i--;
+            }
+          }
+          //create the missing dirs
+          var missingDirs = result;
+          createMissingDirs(pathFinal, missingDirs);
+          //once the missing dirs are created we need to get the set of categories again as those are the names of the dirs
+          getSetOfScriptCategories(function (err, result) {
+            //in this callback we then get the files of each sub dir and compare it to whats in mongo
+            for (var i = 0; i < result.length; i++) {
+              getSubDirectoriesOrFiles(pathFinal + "/" + result[i], function (files) {
+
+              })
+            }
+          })
+        }
+      });
+    });
     console.log(req.body.message);
     res.send(res.header);
   }
 
-  if(req.body.message == "new_player"){
+  if (req.body.message == "new_player") {
     username = req.body.email;
     gameName = req.body.gameName;
     res.send(res.header);
   }
 });
+
+
+function getSubDirectoriesOrFiles(path, callback) {
+  fs.readdir(path, function (err, dirContent) {
+    var directories = [];
+    dirContent.forEach(contentObject => {
+      directories.push(contentObject);
+    });
+    return callback(directories);
+  })
+}
+
 
 app.set('port', 5000);
 app.use('/static', express.static(__dirname + '/static'));
@@ -57,9 +106,6 @@ server.listen(5000, function () {
 
 //######################################
 var canvasObjects = {}
-
-//canvasObjects[0] = {id: 0, bounds: [{x:100,y:100},{x:100,y:150},{x:150,y:200}], moveAble: true, collideAble: true, targetAble:true};
-//canvasObjects[1] = {id: 1, bounds: [{x:400,y:400},{x:700, y:400}, {x: 700, y:700}, {x:400,y:700}],moveAble:true, collideAble:true, targetAble: true};
 
 
 function initCanvasObjects(name, callback) {
@@ -79,11 +125,35 @@ function initCanvasObjects(name, callback) {
   });
 }
 
+function createMissingDirs(path, dirs, callback) {
+  for (var i = 0; i < dirs.length; i++) {
+    if (!fs.existsSync(path + "/" + dirs[i])) {
+      fs.mkdirSync(path + "/" + dirs[i]);
+    }
+  }
+
+}
+
 function getGames(callback) {
   mongoDbActions.findAllGames(MongoClient, dbPath, function (err, result) {
     if (err != null) { callback(err, null) }
     else {
       callback(null, result)
+    }
+  })
+}
+
+function getSetOfScriptCategories(callback) {
+  mongoDbActions.getAllScriptObjects(MongoClient, dbPath, function (err, result) {
+    if (err != null) { callback(err, null) }
+    else {
+      var categoriesSet = [];
+      for (var i = 0; i < result.length; i++) {
+        if (categoriesSet.indexOf(result[i].Category) == -1) {
+          categoriesSet.push(result[i].Category);
+        }
+      }
+      callback(null, categoriesSet);
     }
   })
 }
@@ -124,8 +194,8 @@ function getGameRoomsForGame(game, callback) {
       callback(err, null);
     } else {
       var roomsList = [];
-      for(var i = 0; i < result.length; i++){
-        if(result[i].game == game){
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].game == game) {
           roomsList.push(result[i]);
         }
       }

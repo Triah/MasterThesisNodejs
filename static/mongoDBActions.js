@@ -163,3 +163,23 @@ exports.findAllUsers = function (client, path) {
         });
     });
 };
+
+
+/*
+* This part of the code is responsible for handling the scripts needed for the modularity
+* this will include both the game.js and the components.
+*/
+
+exports.getAllScriptObjects = function(client, path, callback){
+    client.connect(path, function(err, db){
+        if(err) callback(err,null);
+        var dbContent = db.db(dbName);
+        dbContent.collection("Scripts").find({}).toArray(function(err, result){
+            if(err) callback(err,null);
+            else {
+                callback(null, result);
+                db.close();
+            }
+        })
+    })
+}
