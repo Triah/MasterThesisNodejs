@@ -128,6 +128,7 @@ exports.deleteGameRoomsEntry = function (client, path) {
         //var myquery = { GameId: 2 };
         dbContent.collection("GameRooms").drop(function (err, obj) {
             if (err) throw err;
+            console.log("droppedTable");
             db.close();
         });
     });

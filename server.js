@@ -60,14 +60,32 @@ app.post('/', function (req, res) {
           getSetOfScriptCategories(function (err, result) {
             //in this callback we then get the files of each sub dir and compare it to whats in mongo
             for (var i = 0; i < result.length; i++) {
-              getSubDirectoriesOrFiles(pathFinal + "/" + result[i], function (files) {
-
+              getFilesForSubdirectory(pathFinal + result[i], function (files, path) {
+                var currentPathSplit = path.split("/");
+                var currentPath = currentPathSplit[currentPathSplit.length - 1];
+                getFilesForCategory(currentPath, function (err, result) {
+                  if (err != null) { console.log("error occured") }
+                  else {
+                    for (var i = 0; i < result.length; i++) {
+                      if (files.indexOf(result[i]) != -1) {
+                        result.splice(i, 1);
+                        i--;
+                      }
+                    }
+                    //create missing files
+                    for(var j = 0; j < result.length; j++){
+                      createMissingFiles(path, result[j]);
+                    }
+                    
+                  }
+                })
               })
             }
           })
         }
-      });
+      })
     });
+
     console.log(req.body.message);
     res.send(res.header);
   }
@@ -79,6 +97,11 @@ app.post('/', function (req, res) {
   }
 });
 
+function getFilesForSubdirectory(path, callback) {
+  fs.readdir(path, function (err, dirContent) {
+    return callback(dirContent, path);
+  })
+}
 
 function getSubDirectoriesOrFiles(path, callback) {
   fs.readdir(path, function (err, dirContent) {
@@ -125,13 +148,52 @@ function initCanvasObjects(name, callback) {
   });
 }
 
+function getFilesForCategory(currentPath, callback) {
+  mongoDbActions.getAllScriptObjects(MongoClient, dbPath, function (err, result) {
+    if (err != null) { callback("error in getFilesForCategory", null); }
+    else {
+      var arrayOfFiles = [];
+      for (var i = 0; i < result.length; i++) {
+        if (currentPath == result[i].Category) {
+          arrayOfFiles.push(result[i].ComponentName);
+        }
+      }
+      callback(null, arrayOfFiles);
+    }
+  })
+}
+
 function createMissingDirs(path, dirs, callback) {
   for (var i = 0; i < dirs.length; i++) {
     if (!fs.existsSync(path + "/" + dirs[i])) {
       fs.mkdirSync(path + "/" + dirs[i]);
     }
   }
+}
 
+function createMissingFiles(path, filename) {
+  if (!fs.existsSync(path + "/" + filename)) {
+    getFileContent(filename, function (err, result, name) {
+      if (err != null) {console.log("error in getFileCallback"); }
+      else {
+        fs.writeFile(path + "/" + name, result, function(err,data){if(err) throw err; });
+      }
+
+    })
+  }
+}
+
+function getFileContent(name, callback) {
+  mongoDbActions.getAllScriptObjects(MongoClient, dbPath, function (err, result) {
+    if (err != null) { callback("error getting file content", null) }
+    else {
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].ComponentName == name) {
+          callback(null, result[i].ComponentContent, name)
+        }
+      }
+    }
+  })
 }
 
 function getGames(callback) {
@@ -157,7 +219,6 @@ function getSetOfScriptCategories(callback) {
     }
   })
 }
-
 // This method uses a callback to find the users in a specific room
 function getUsersInRoom(game, users, callback) {
   mongoDbActions.getUsersInRoom(MongoClient, dbPath, users, game, function (err, result) {
@@ -173,6 +234,7 @@ function getUsersInRoom(game, users, callback) {
 function addUserToRoom(roomname, user, users) {
   mongoDbActions.addUserToGameRoom(MongoClient, dbPath, roomname, user, users);
 }
+
 
 
 //this method is for adding a room for a game, this is supposed to happen
