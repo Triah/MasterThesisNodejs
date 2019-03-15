@@ -149,34 +149,3 @@ function createJSONfromInitObjects(objectList){
     draw();
   });
   
-
-function createObjects(list) { 
-for (let i in list) { 
-if(list[i].object == "abstractCollisionShape"){ 
-canvasObjects[i] = new abstractCollisionShape(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "abstractShape"){ 
-canvasObjects[i] = new abstractShape(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "shapesSquare"){ 
-canvasObjects[i] = new shapesSquare(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "testSquare"){ 
-canvasObjects[i] = new testSquare(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "testsSquare"){ 
-canvasObjects[i] = new testsSquare(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "testShape"){ 
-canvasObjects[i] = new testShape(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "testsCollisionShape"){ 
-canvasObjects[i] = new testsCollisionShape(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "dwadwaShape"){ 
-canvasObjects[i] = new dwadwaShape(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}
-}
-canvasUpdated()
-}
-import abstractCollisionShape from '../static/modules/abstract/collisionShape.js';
-import abstractShape from '../static/modules/abstract/shape.js';
-import shapesSquare from '../static/modules/shapes/Square.js';
-import testSquare from '../static/modules/test/Square.js';
-import testsSquare from '../static/modules/tests/Square.js';
-import testShape from '../static/modules/test/shape.js';
-import testsCollisionShape from '../static/modules/tests/collisionShape.js';
-import dwadwaShape from '../static/modules/dwadwa/shape.js';

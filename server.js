@@ -30,7 +30,6 @@ var username;
 var gameName;
 //Handle HttpRequests
 app.post('/', function (req, res) {
-
   if (req.body.message == "file_uploaded") {
     //String manipulation to get usable path
     var path = __dirname + "\\static\\modules";
@@ -39,7 +38,6 @@ app.post('/', function (req, res) {
     for (var i = 0; i < pathParts.length; i++) {
       pathFinal += pathParts[i] + "/";
     }
-
     //Get directories which exist
     getSubDirectoriesOrFiles(pathFinal, function (dirs) {
       //For each dir in dirs i need to check if a category in the mongodb exists that does not exist in this list.
@@ -73,10 +71,10 @@ app.post('/', function (req, res) {
                       }
                     }
                     //create missing files
-                    for(var j = 0; j < result.length; j++){
+                    for (var j = 0; j < result.length; j++) {
                       createMissingFiles(path, result[j]);
                     }
-                    
+                    createNewGameFile();
                   }
                 })
               })
@@ -85,7 +83,6 @@ app.post('/', function (req, res) {
         }
       })
     });
-
     console.log(req.body.message);
     res.send(res.header);
   }
@@ -96,6 +93,119 @@ app.post('/', function (req, res) {
     res.send(res.header);
   }
 });
+
+function getRootPath() {
+  var path = __dirname;
+  var pathParts = path.split("\\");
+  var pathFinal = "";
+  for (var i = 0; i < pathParts.length; i++) {
+    pathFinal += pathParts[i] + "/";
+  }
+  return pathFinal;
+}
+
+
+function createNewGameFile(){
+  writeCreateObjectsAndImportMethod(function(err,result){
+    if(err != null) {return err}
+    else{
+      fs.writeFile(getRootPath() + "static/game.js",result,function(err,data){
+        if(err){}
+        else{
+        }
+      })
+    }
+  })
+}
+
+function writeCreateObjectsAndImportMethod(callback) {
+  mongoDbActions.getAllScriptObjects(MongoClient, dbPath, function (err, result) {
+    if (err != null) { callback("error occured while getting db", null) }
+    else {
+      var functionString = "";
+      functionString += "function createObjects(list) { \nfor (let i in list) { \n";
+      var currentExistingIfEntry = []
+      for (var i = 0; i < result.length; i++) {
+        if (currentExistingIfEntry.indexOf(result[i].Category +
+          result[i].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+          result[i].ComponentName.split(".")[0].slice(1)) == -1) {
+          if (i == 0) {
+            functionString += "if(";
+          } else {
+            functionString += "else if("
+          }
+          functionString += "list[i].object == " + '"' + result[i].Category +
+            result[i].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+            result[i].ComponentName.split(".")[0].slice(1) + '"' +
+            "){ \n";
+          functionString += "canvasObjects[i] = new " + result[i].Category +
+            result[i].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+            result[i].ComponentName.split(".")[0].slice(1);
+          var parameters = result[i].ComponentContent.split("constructor")[1].split(")")[0].substring(1).split(",");
+          functionString += "(";
+          for (var j = 0; j < parameters.length; j++) {
+            if (parameters[j].charAt(0) == " ") {
+              parameters[j] = parameters[j].substring(1);
+            }
+            if (j != parameters.length - 1) {
+              functionString += "list[i]." + parameters[j] + ",";
+            } else {
+              functionString += "list[i]." + parameters[j];
+            }
+          }
+          functionString += "); \n}";
+
+          currentExistingIfEntry.push(result[i].Category +
+            result[i].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+            result[i].ComponentName.split(".")[0].slice(1))
+        }
+
+      }
+      functionString += "\n}\ncanvasUpdated()\n}";
+
+      var importString = "";
+      var currentExistingImport = [];
+      for (var j = 0; j < result.length; j++) {
+        if (currentExistingImport.indexOf(result[j].Category +
+          result[j].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+          result[j].ComponentName.split(".")[0].slice(1)) == -1) {
+          importString += "import " + result[j].Category +
+            result[j].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+            result[j].ComponentName.split(".")[0].slice(1) + " from '../static/modules/" +
+            result[j].Category + "/" + result[j].ComponentName + "';\n";
+          currentExistingImport.push(result[j].Category +
+            result[j].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+            result[j].ComponentName.split(".")[0].slice(1))
+        }
+
+      }
+      
+      var fileToAppend = readStaticCodeFile(function(err,result){
+        if(err != null){callback(err)}
+        else{
+          var staticString = result;
+          var dynamicFileString = staticString + "\n\n" + functionString + "\n" + importString;
+          callback(null, dynamicFileString);
+        }
+      })
+    }
+  });
+}
+
+
+function readStaticCodeFile(callback) {
+  var filePath = getRootPath() + "static/codeGenFiles/staticGame.js";
+  fs.readFile(filePath, function (err, data) {
+    if (err) callback(err, null);
+    var fileContents = data.toString();
+    callback(null, fileContents)
+  });
+
+  //then i need to import all that is existing currently and then add imports for the rest
+  //then generate all code untill imports which can be the last part i guess
+  //then use db to create import statements
+  //now create and replace the game.js file.
+}
 
 function getFilesForSubdirectory(path, callback) {
   fs.readdir(path, function (err, dirContent) {
@@ -174,9 +284,9 @@ function createMissingDirs(path, dirs, callback) {
 function createMissingFiles(path, filename) {
   if (!fs.existsSync(path + "/" + filename)) {
     getFileContent(filename, function (err, result, name) {
-      if (err != null) {console.log("error in getFileCallback"); }
+      if (err != null) { console.log("error in getFileCallback"); }
       else {
-        fs.writeFile(path + "/" + name, result, function(err,data){if(err) throw err; });
+        fs.writeFile(path + "/" + name, result, function (err, data) { if (err) throw err; });
       }
 
     })
