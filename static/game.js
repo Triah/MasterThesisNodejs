@@ -44,7 +44,7 @@ function createJSONfromInitObjects(objectList){
   //drag and drop stuff
   var lockedItem = null;
   var itemIsLocked = false;
-  var DragOffset = { x: 0, y: 0 };
+
   canvas.onmousedown = function (e) {
     //make sure only one item is picked
     for (var i = 0; i < canvasObjects.length; i++) {
