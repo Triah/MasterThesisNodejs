@@ -8,6 +8,12 @@ export default class CollisionShape extends Shape {
         this.colliding = false;
     }
 
+    setDefaultForUninstantiatedParameters(canvas){
+        super.setDefaultForUninstantiatedParameters(canvas);
+        this.collideAble = true;
+        console.log(this);
+    }
+
     isCollidingWithOtherObject(objects) {
         var collision = null;
         if(this.calcCollisionOtherObjectsToThis(objects, this) != null){
