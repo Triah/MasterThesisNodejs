@@ -134,6 +134,18 @@ exports.deleteGameRoomsEntry = function (client, path) {
     });
 }
 
+exports.deleteScripts = function (client, path) {
+    client.connect(path, function (err, db) {
+        var dbContent = db.db(dbName);
+        //var myquery = { GameId: 2 };
+        dbContent.collection("Scripts").drop(function (err, obj) {
+            if (err) throw err;
+            console.log("droppedTable");
+            db.close();
+        });
+    });
+}
+
 //USER ACTIONS
 exports.insertOneUser = function (client, path, id, username) {
     client.connect(path, function (err, db) {

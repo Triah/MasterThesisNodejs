@@ -293,6 +293,14 @@ function createMissingFiles(path, filename) {
   }
 }
 
+
+//Code for emptying mongo scripts, testing code.
+/*function clearScriptsInMongo(){
+  mongoDbActions.deleteScripts(MongoClient, dbPath);
+}
+clearScriptsInMongo();
+*/
+
 function getFileContent(name, callback) {
   mongoDbActions.getAllScriptObjects(MongoClient, dbPath, function (err, result) {
     if (err != null) { callback("error getting file content", null) }
