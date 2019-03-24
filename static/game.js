@@ -151,17 +151,40 @@ function createJSONfromInitObjects(objectList){
   
 
 function createObjects(list) { 
-for (let i in list) { 
-if(list[i].object == "abstractCollisionShape"){ 
-canvasObjects[i] = new abstractCollisionShape(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "abstractShape"){ 
-canvasObjects[i] = new abstractShape(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
-}else if(list[i].object == "shapesSquare"){ 
-canvasObjects[i] = new shapesSquare(list[i].id,list[i].bounds,list[i].moveAble,list[i].collideAble,list[i].targetAble); 
+list.forEach(object => { 
+ for(var i = 0; i < object.length; i++){ 
+ if(object[i].object == "abstractcollisionShape"){ 
+canvasObjects[i] = new abstractcollisionShape(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "abstractshape"){ 
+canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "shapessquare"){ 
+canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "testssquare"){ 
+canvasObjects[i] = new testssquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "testsquare"){ 
+canvasObjects[i] = new testsquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "testcategorysquare"){ 
+canvasObjects[i] = new testcategorysquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "dwadwasquare"){ 
+canvasObjects[i] = new dwadwasquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "dwadwacollisionShape"){ 
+canvasObjects[i] = new dwadwacollisionShape(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "testscollisionShape"){ 
+canvasObjects[i] = new testscollisionShape(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "abstractsquare"){ 
+canvasObjects[i] = new abstractsquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
 }
 }
+ });
 canvasUpdated()
 }
-import abstractCollisionShape from '../static/modules/abstract/collisionShape.js';
-import abstractShape from '../static/modules/abstract/shape.js';
-import shapesSquare from '../static/modules/shapes/Square.js';
+import abstractcollisionShape from '../static/modules/abstract/collisionShape.js';
+import abstractshape from '../static/modules/abstract/shape.js';
+import shapessquare from '../static/modules/shapes/Square.js';
+import testssquare from '../static/modules/tests/Square.js';
+import testsquare from '../static/modules/test/Square.js';
+import testcategorysquare from '../static/modules/testcategory/Square.js';
+import dwadwasquare from '../static/modules/dwadwa/Square.js';
+import dwadwacollisionShape from '../static/modules/dwadwa/collisionShape.js';
+import testscollisionShape from '../static/modules/tests/collisionShape.js';
+import abstractsquare from '../static/modules/abstract/Square.js';

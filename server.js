@@ -123,7 +123,7 @@ function writeCreateObjectsAndImportMethod(callback) {
     if (err != null) { callback("error occured while getting db", null) }
     else {
       var functionString = "";
-      functionString += "function createObjects(list) { \nfor (let i in list) { \n";
+      functionString += "function createObjects(list) { \nlist.forEach(object => { \n for(var i = 0; i < object.length; i++){ \n ";
       var currentExistingIfEntry = []
       for (var i = 0; i < result.length; i++) {
         if (currentExistingIfEntry.indexOf(result[i].Category +
@@ -134,12 +134,12 @@ function writeCreateObjectsAndImportMethod(callback) {
           } else {
             functionString += "else if("
           }
-          functionString += "list[i].object == " + '"' + result[i].Category +
-            result[i].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+          functionString += "object[i].object == " + '"' + result[i].Category.toLowerCase() +
+            result[i].ComponentName.split(".")[0].charAt(0).toLowerCase() +
             result[i].ComponentName.split(".")[0].slice(1) + '"' +
             "){ \n";
-          functionString += "canvasObjects[i] = new " + result[i].Category +
-            result[i].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+          functionString += "canvasObjects[i] = new " + result[i].Category.toLowerCase() +
+            result[i].ComponentName.split(".")[0].charAt(0).toLowerCase() +
             result[i].ComponentName.split(".")[0].slice(1);
           var parameters = result[i].ComponentContent.split("constructor")[1].split(")")[0].substring(1).split(",");
           functionString += "(";
@@ -148,9 +148,9 @@ function writeCreateObjectsAndImportMethod(callback) {
               parameters[j] = parameters[j].substring(1);
             }
             if (j != parameters.length - 1) {
-              functionString += "list[i]." + parameters[j] + ",";
+              functionString += "object[i]." + parameters[j] + ",";
             } else {
-              functionString += "list[i]." + parameters[j];
+              functionString += "object[i]." + parameters[j];
             }
           }
           functionString += "); \n}";
@@ -161,7 +161,8 @@ function writeCreateObjectsAndImportMethod(callback) {
         }
 
       }
-      functionString += "\n}\ncanvasUpdated()\n}";
+      functionString += "\n}\n });";
+      functionString += "\ncanvasUpdated()\n}";
 
       var importString = "";
       var currentExistingImport = [];
@@ -169,12 +170,12 @@ function writeCreateObjectsAndImportMethod(callback) {
         if (currentExistingImport.indexOf(result[j].Category +
           result[j].ComponentName.split(".")[0].charAt(0).toUpperCase() +
           result[j].ComponentName.split(".")[0].slice(1)) == -1) {
-          importString += "import " + result[j].Category +
-            result[j].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+          importString += "import " + result[j].Category.toLowerCase() +
+            result[j].ComponentName.split(".")[0].charAt(0).toLowerCase() +
             result[j].ComponentName.split(".")[0].slice(1) + " from '../static/modules/" +
             result[j].Category + "/" + result[j].ComponentName + "';\n";
           currentExistingImport.push(result[j].Category +
-            result[j].ComponentName.split(".")[0].charAt(0).toUpperCase() +
+            result[j].ComponentName.split(".")[0].charAt(0).toLowerCase() +
             result[j].ComponentName.split(".")[0].slice(1))
         }
 

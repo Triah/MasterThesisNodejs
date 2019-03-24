@@ -7,6 +7,11 @@ export default class Shape {
         this.moveAble = moveAble;
         this.collideAble = collideAble;
         this.targetAble = targetAble;
+        this.object = null;
+    }
+
+    setObjectName(object) {
+        this.object = object;
     }
     
     /**
