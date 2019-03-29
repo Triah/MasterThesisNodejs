@@ -1,11 +1,10 @@
 'use strict';
 export default class Shape {
-    constructor(id, bounds, moveAble, collideAble, targetAble) {
+    constructor(id, bounds, moveAble, targetAble) {
         this.id = id;
         this.bounds = bounds;
         this.colliding;
         this.moveAble = moveAble;
-        this.collideAble = collideAble;
         this.targetAble = targetAble;
         this.object = null;
     }
@@ -24,9 +23,6 @@ export default class Shape {
         }
         if(this.moveAble == null){
             this.moveAble = true;
-        }
-        if(this.collideAble == null){
-            this.collideAble = false;
         }
         if(this.targetAble == null){
             this.targetAble = false;

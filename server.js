@@ -201,11 +201,6 @@ function readStaticCodeFile(callback) {
     var fileContents = data.toString();
     callback(null, fileContents)
   });
-
-  //then i need to import all that is existing currently and then add imports for the rest
-  //then generate all code untill imports which can be the last part i guess
-  //then use db to create import statements
-  //now create and replace the game.js file.
 }
 
 function getFilesForSubdirectory(path, callback) {
@@ -238,9 +233,7 @@ server.listen(5000, function () {
   console.log('Starting server on port 5000');
 });
 
-//######################################
 var canvasObjects = {}
-
 
 function initCanvasObjects(name, callback) {
   mongoDbActions.getComponentsForGame(MongoClient, dbPath, name, function (err, result) {
@@ -453,6 +446,14 @@ io.on('connection', function (socket) {
       });
       username = null;
       gameName = null;
+    }
+    //code which avoids using the asp.net core server to test new components
+    else{
+      players[socket.id] = {
+        
+      };
+      var testCanvasObjects = {"list":{"Components":'[{"id": 0, "bounds": [{"x":400,"y":400},{"x":700, "y":400}, {"x": 700, "y":700}, {"x":400,"y":700}],"moveAble":true, "collideAble":false, "targetAble": true, "object":"memorymemorycard"}]', "Name":"memoryGame"}};
+      socket.emit('initObjects',testCanvasObjects)
     }
   });
 

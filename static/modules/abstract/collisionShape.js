@@ -4,14 +4,14 @@ import Shape from '../abstract/shape.js';
 
 export default class CollisionShape extends Shape {
     constructor(id, bounds,moveAble,collideAble,targetAble) {
-        super(id,bounds,moveAble,collideAble,targetAble);
+        super(id,bounds,moveAble,targetAble);
+        this.collideAble = collideAble;
         this.colliding = false;
     }
 
     setDefaultForUninstantiatedParameters(canvas){
         super.setDefaultForUninstantiatedParameters(canvas);
         this.collideAble = true;
-        console.log(this);
     }
 
     isCollidingWithOtherObject(objects) {
