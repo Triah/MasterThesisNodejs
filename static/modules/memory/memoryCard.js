@@ -8,7 +8,10 @@ export default class MemoryCard extends Shape {
         //Need a color
         //Need a clickevent
         //Need an image
-        
+        //Needs text
+        //Needs a text-visible bool
+        //Needs an image-visible bool
+        //Need a match bool
     }
 
     setDefaultForUninstantiatedParameters(canvas){
