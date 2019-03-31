@@ -15,7 +15,7 @@ export default class MemoryCard extends Shape {
     setDefaultForUninstantiatedParameters(canvas){
         super.setDefaultForUninstantiatedParameters(canvas);
 
-        this.privateVariables = {"cloneExists": undefined};
+        this.privateVariables = {"cloneExists": undefined, "clone": undefined};
         //Add new parameters
         //create a clone of object and link them but let them be seperate objects.
     }
@@ -28,6 +28,11 @@ export default class MemoryCard extends Shape {
         if(e.type == "mousedown"){
             this.mouseDownEvent();
             this.clone(objects);
+            for(var i = 0; i < objects.length; i++){
+                if(i == this.privateVariables.clone){
+                    console.log(objects[i]);
+                }
+            }
         } 
         if(e.type == "mousemove"){
             //this serves mostly as a way of showcasing how to do logic for each component to individualize it.
@@ -42,7 +47,9 @@ export default class MemoryCard extends Shape {
         if(this.privateVariables.cloneExists == undefined){
             this.privateVariables.cloneExists = true;
             var testObj = new MemoryCard(listToAddTo.length,[{"x":400,"y":400},{"x":700, "y":400}, {"x": 700, "y":700}, {"x":400,"y":700}],this.moveAble,this.targetAble,this.color,this.text,this.textVisible, this.privateVariables);
+            this.privateVariables.clone = listToAddTo.length;
             listToAddTo.push(testObj);
+            
         }
         
     }

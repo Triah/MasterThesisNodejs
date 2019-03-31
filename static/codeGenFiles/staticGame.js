@@ -54,6 +54,11 @@ function createJSONfromInitObjects(objectList){
         canvasObjects[i].process(e, canvasObjects);
       }
     }
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    canvasGrid.display(canvas, context);
+    for (var i = 0; i < canvasObjects.length; i++) {
+      canvasObjects[i].draw(context);
+    }
   }
   
   canvas.onmousemove = function (e) {
@@ -119,6 +124,13 @@ function createJSONfromInitObjects(objectList){
       lockedItem.process(e,canvasObjects);
       itemIsLocked = false;
       lockedItem = null;
+      
+    }
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    canvasGrid.display(canvas, context);
+    for (var i = 0; i < canvasObjects.length; i++) {
+      canvasObjects[i].draw(context);
     }
   
   }
