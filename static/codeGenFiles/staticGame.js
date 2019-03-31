@@ -48,10 +48,10 @@ function createJSONfromInitObjects(objectList){
   canvas.onmousedown = function (e) {
     //make sure only one item is picked
     for (var i = 0; i < canvasObjects.length; i++) {
-      canvasObjects[i].process(e);
       if (!itemIsLocked && canvasObjects[i].getCollisionArea(e)) {
         itemIsLocked = true;
         lockedItem = canvasObjects[i];
+        canvasObjects[i].process(e, canvasObjects);
       }
     }
   }
@@ -59,6 +59,7 @@ function createJSONfromInitObjects(objectList){
   canvas.onmousemove = function (e) {
     if (itemIsLocked && lockedItem != null) {
       if (lockedItem.moveAble) {
+        lockedItem.process(e,canvasObjects);
         lockedItem.move(canvas, e);
       }
   
@@ -115,6 +116,7 @@ function createJSONfromInitObjects(objectList){
     //unlock item
     if (lockedItem != null) {
       socket.emit('updateItemPosition', lockedItem);
+      lockedItem.process(e,canvasObjects);
       itemIsLocked = false;
       lockedItem = null;
     }
@@ -149,4 +151,3 @@ function createJSONfromInitObjects(objectList){
   socket.on('state', function (players) {
     draw();
   });
-  

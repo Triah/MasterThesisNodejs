@@ -65,7 +65,7 @@ export default class Shape {
         return vectors;
     }
 
-    process(e){
+    process(e,objects){
         //TODO
     }
 

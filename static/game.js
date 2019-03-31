@@ -51,21 +51,15 @@ function createJSONfromInitObjects(objectList){
       if (!itemIsLocked && canvasObjects[i].getCollisionArea(e)) {
         itemIsLocked = true;
         lockedItem = canvasObjects[i];
-        canvasObjects[i].process(e);
+        canvasObjects[i].process(e, canvasObjects);
       }
-    }
-
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    canvasGrid.display(canvas, context);
-    for (var i = 0; i < canvasObjects.length; i++) {
-      canvasObjects[i].draw(context);
     }
   }
   
   canvas.onmousemove = function (e) {
     if (itemIsLocked && lockedItem != null) {
-      lockedItem.process(e);
       if (lockedItem.moveAble) {
+        lockedItem.process(e,canvasObjects);
         lockedItem.move(canvas, e);
       }
   
@@ -121,8 +115,8 @@ function createJSONfromInitObjects(objectList){
   canvas.onmouseup = function (e) {
     //unlock item
     if (lockedItem != null) {
-      lockedItem.process(e);
       socket.emit('updateItemPosition', lockedItem);
+      lockedItem.process(e,canvasObjects);
       itemIsLocked = false;
       lockedItem = null;
     }
@@ -157,20 +151,18 @@ function createJSONfromInitObjects(objectList){
   socket.on('state', function (players) {
     draw();
   });
-  
 
 function createObjects(list) { 
 list.forEach(object => { 
  for(var i = 0; i < object.length; i++){ 
-   console.log(object[i]);
  if(object[i].object == "abstractshape"){ 
 canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible); 
 }else if(object[i].object == "shapessquare"){ 
 canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible); 
 }else if(object[i].object == "memorymemoryCard"){ 
-canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible); 
+canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables); 
 }
-}
+canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}
  });
 canvasUpdated()
 }
