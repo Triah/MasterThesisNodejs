@@ -452,7 +452,7 @@ io.on('connection', function (socket) {
       players[socket.id] = {
         
       };
-      var testCanvasObjects = {"list":{"Components":'[{"id": 0, "bounds": [{"x":400,"y":400},{"x":700, "y":400}, {"x": 700, "y":700}, {"x":400,"y":700}],"moveAble":true, "collideAble":false, "targetAble": true, "object":"memorymemorycard"}]', "Name":"memoryGame"}};
+      var testCanvasObjects = {"list":{"Components":'[{"id": 0, "bounds": [{"x":400,"y":400},{"x":700, "y":400}, {"x": 700, "y":700}, {"x":400,"y":700}],"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": true, "object":"memorymemoryCard"}]', "Name":"memoryGame"}};
       socket.emit('initObjects',testCanvasObjects)
     }
   });

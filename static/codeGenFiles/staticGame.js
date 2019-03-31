@@ -48,6 +48,7 @@ function createJSONfromInitObjects(objectList){
   canvas.onmousedown = function (e) {
     //make sure only one item is picked
     for (var i = 0; i < canvasObjects.length; i++) {
+      canvasObjects[i].process(e);
       if (!itemIsLocked && canvasObjects[i].getCollisionArea(e)) {
         itemIsLocked = true;
         lockedItem = canvasObjects[i];

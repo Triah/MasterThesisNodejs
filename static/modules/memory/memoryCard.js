@@ -3,13 +3,10 @@
 import Shape from '../abstract/shape.js';
 
 export default class MemoryCard extends Shape {
-    constructor(id, bounds, moveAble, targetAble){
-        super(id,bounds,moveAble,targetAble);
-        //Need a color
+    constructor(id, bounds, moveAble, targetAble, color, text, textVisible){
+        super(id, bounds, moveAble, targetAble, color, text, textVisible);
         //Need a clickevent
         //Need an image
-        //Needs text
-        //Needs a text-visible bool
         //Needs an image-visible bool
         //Need a match bool
     }
