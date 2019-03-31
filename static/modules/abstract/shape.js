@@ -69,7 +69,7 @@ export default class Shape {
         //TODO
     }
 
-        draw(context) {
+    draw(context) {
         context.beginPath();
         if(this.color != ""){
             context.fillStyle = this.color;

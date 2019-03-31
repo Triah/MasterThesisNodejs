@@ -54,10 +54,17 @@ function createJSONfromInitObjects(objectList){
         lockedItem = canvasObjects[i];
       }
     }
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    canvasGrid.display(canvas, context);
+    for (var i = 0; i < canvasObjects.length; i++) {
+      canvasObjects[i].draw(context);
+    }
   }
   
   canvas.onmousemove = function (e) {
     if (itemIsLocked && lockedItem != null) {
+      lockedItem.process(e);
       if (lockedItem.moveAble) {
         lockedItem.move(canvas, e);
       }
@@ -114,6 +121,7 @@ function createJSONfromInitObjects(objectList){
   canvas.onmouseup = function (e) {
     //unlock item
     if (lockedItem != null) {
+      lockedItem.process(e);
       socket.emit('updateItemPosition', lockedItem);
       itemIsLocked = false;
       lockedItem = null;

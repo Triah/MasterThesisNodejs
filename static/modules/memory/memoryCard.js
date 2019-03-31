@@ -5,10 +5,10 @@ import Shape from '../abstract/shape.js';
 export default class MemoryCard extends Shape {
     constructor(id, bounds, moveAble, targetAble, color, text, textVisible){
         super(id, bounds, moveAble, targetAble, color, text, textVisible);
-        //Need a clickevent
         //Need an image
         //Needs an image-visible bool
         //Need a match bool
+        //Needs a clone of some kind
     }
 
     setDefaultForUninstantiatedParameters(canvas){
@@ -22,6 +22,25 @@ export default class MemoryCard extends Shape {
     }
 
     process(e){
-        console.log(e);
+        if(e.type == "mousedown"){
+            this.mouseDownEvent();
+        } 
+        if(e.type == "mousemove"){
+            //this serves mostly as a way of showcasing how to do logic for each component to individualize it.
+            //console.log("mousemoveevent");
+        }
+        if(e.type == "mouseup"){
+            //console.log("mouseupevent");
+        }
+    }
+
+    mouseDownEvent(){
+        if(this.textVisible){
+            this.textVisible = false;
+        } else if (!this.textVisible){
+            this.textVisible = true;
+        }
+        console.log(this.textVisible);
+        
     }
 }
