@@ -20,6 +20,10 @@ export default class MemoryCard extends Shape {
         //create a clone of object and link them but let them be seperate objects.
     }
 
+    init(objects){
+        this.clone(objects);
+    }
+
     setObjectName(object) {
         this.object = object;
     }
@@ -27,7 +31,6 @@ export default class MemoryCard extends Shape {
     process(e,objects){
         if(e.type == "mousedown"){
             this.mouseDownEvent();
-            this.clone(objects);
             for(var i = 0; i < objects.length; i++){
                 console.log(objects[i]);
             }
@@ -42,15 +45,24 @@ export default class MemoryCard extends Shape {
     }
 
     clone(listToAddTo){
-        if(this.privateVariables.cloneExists == undefined){
-            this.privateVariables.cloneExists = true;
-            this.privateVariables.cloneId = [];
-            var testObj = new MemoryCard(listToAddTo.length,[{"x":400,"y":400},{"x":700, "y":400}, {"x": 700, "y":700}, {"x":400,"y":700}],this.moveAble,this.targetAble,this.color,this.text,this.textVisible, this.privateVariables);
-            this.privateVariables.cloneId.push(this.id, testObj.id);
-            listToAddTo.push(testObj);
-            
+        for(var object in listToAddTo){
+            if(listToAddTo[object].object == this.object){
+                if(listToAddTo[object].privateVariables.cloneExists == undefined){
+                    var clone = new MemoryCard(listToAddTo.length,[{"x":200,"y":400},{"x":500, "y":400}, {"x": 500, "y":700}, {"x":200,"y":700}],listToAddTo[object].moveAble,
+                    listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables);
+                    listToAddTo[object].privateVariables.cloneExists = true;
+                    clone.privateVariables.cloneId = []
+                    clone.privateVariables.cloneId.push(listToAddTo[object].id, clone.id)
+                    listToAddTo.push(clone);
+                    console.log(clone.privateVariables.cloneId);
+                }
+            }
         }
-        
+        /*this.privateVariables.cloneExists = true;
+        this.privateVariables.cloneId = [];
+        var testObj = new MemoryCard(listToAddTo.length,[{"x":200,"y":400},{"x":500, "y":400}, {"x": 500, "y":700}, {"x":200,"y":700}],this.moveAble,this.targetAble,this.color,this.text,this.textVisible, this.privateVariables);
+        this.privateVariables.cloneId.push(this.id, testObj.id);*/
+        //listToAddTo.push(testObj);
     }
 
     mouseDownEvent(){

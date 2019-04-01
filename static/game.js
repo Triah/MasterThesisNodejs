@@ -174,8 +174,12 @@ canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].move
 }else if(object[i].object == "memorymemoryCard"){ 
 canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables); 
 }
-canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}
+canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);
+}
  });
+for(var i = 0; i < canvasObjects.length; i++){
+  canvasObjects[i].init(canvasObjects);
+}
 canvasUpdated()
 }
 import abstractshape from '../static/modules/abstract/shape.js';

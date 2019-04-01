@@ -161,7 +161,8 @@ function writeCreateObjectsAndImportMethod(callback) {
         }
 
       }
-      functionString += "\ncanvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}\n });";
+      functionString += "\ncanvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}\n }); + \n";
+      functionString += "for(var i = 0; i < canvasObjects.length; i++){canvasObjects[i].init(canvasObjects);}"
       functionString += "\ncanvasUpdated()\n}";
 
       var importString = "";
