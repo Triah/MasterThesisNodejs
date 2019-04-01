@@ -1,8 +1,9 @@
 'use strict';
 export default class Shape {
-    constructor(id, bounds, moveAble, targetAble, color, text, textVisible) {
+    constructor(id, bounds, moveAble, targetAble, color, text, textVisible, size) {
         this.id = id;
         this.colliding;
+        this.size = size;
         this.color = color;
         this.text = text;
         this.textVisible = textVisible;
@@ -39,6 +40,13 @@ export default class Shape {
         if(this.textVisible == null){
             this.textVisible = false;
         }
+        if(this.size == null){
+            this.size = 1;
+        }
+    }
+
+    scaleSize(multiplier){
+        //TODO
     }
 
     getBounds() {

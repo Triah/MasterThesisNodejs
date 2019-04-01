@@ -3,8 +3,8 @@
 import Shape from '../abstract/shape.js';
 
 export default class MemoryCard extends Shape {
-    constructor(id, bounds, moveAble, targetAble, color, text, textVisible,privateVariables){
-        super(id, bounds, moveAble, targetAble, color, text, textVisible);
+    constructor(id, bounds, moveAble, targetAble, color, text, textVisible,size,privateVariables){
+        super(id, bounds, moveAble, targetAble, color, text, textVisible,size);
         //Need an image
         //Needs an image-visible bool
         //Need a match bool
