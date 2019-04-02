@@ -63,11 +63,9 @@ export default class Shape {
     scaleSize(multiplier){
         for(var i = 0; i < this.getDegreesForAngles().length; i++){
             if(i == this.getDegreesForAngles().length-1){
-                console.log(i)
                 this.bounds[0].x = this.getDegreesForAngles()[i].x*multiplier;
                 this.bounds[0].y = this.getDegreesForAngles()[i].y*multiplier;   
             } else {
-                console.log(i)
                 this.bounds[i+1].x = this.getDegreesForAngles()[i].x*multiplier;
                 this.bounds[i+1].y = this.getDegreesForAngles()[i].y*multiplier;   
             }
@@ -102,7 +100,7 @@ export default class Shape {
     }
 
     process(e,objects){
-        //TODO
+        //Do nothing
     }
 
     draw(context) {

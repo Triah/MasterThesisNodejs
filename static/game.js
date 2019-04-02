@@ -172,9 +172,10 @@ canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].mov
 }else if(object[i].object == "shapessquare"){ 
 canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible); 
 }else if(object[i].object == "memorymemoryCard"){ 
-canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables); 
+canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables,object[i].size); 
 }
 canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);
+canvasObjects[i].setObjectName(object[i].object);
 }
  });
 for(var i = 0; i < canvasObjects.length; i++){
