@@ -45,9 +45,37 @@ export default class Shape {
         }
     }
 
-    scaleSize(multiplier){
-        //TODO
+    getDegreesForAngles(){
+        var newBounds = [];
+        for(var i = 0; i < this.bounds.length; i++){
+            if(i != this.bounds.length-1){
+                var angle = Math.atan2(this.bounds[i+1].y-this.bounds[i].y,this.bounds[i+1].x-this.bounds[i].x)
+                var vectorLength = Math.sqrt(Math.pow(this.bounds[i+1].x-this.bounds[i].x, 2) + Math.pow(this.bounds[i+1].y-this.bounds[i].y, 2));
+            } else {
+                var angle = Math.atan2(this.bounds[0].y-this.bounds[i].y,this.bounds[0].x-this.bounds[i].x)
+                var vectorLength = Math.sqrt(Math.pow(this.bounds[0].x-this.bounds[i].x, 2) + Math.pow(this.bounds[0].y-this.bounds[i].y, 2));
+            }
+            newBounds.push({x:Math.floor(this.bounds[i].x + vectorLength*Math.cos(angle)),y:Math.floor(this.bounds[i].y + vectorLength*Math.sin(angle))})
+        }
+        return newBounds;
     }
+
+    scaleSize(multiplier){
+        for(var i = 0; i < this.getDegreesForAngles().length; i++){
+            if(i == this.getDegreesForAngles().length-1){
+                console.log(i)
+                this.bounds[0].x = this.getDegreesForAngles()[i].x*multiplier;
+                this.bounds[0].y = this.getDegreesForAngles()[i].y*multiplier;   
+            } else {
+                console.log(i)
+                this.bounds[i+1].x = this.getDegreesForAngles()[i].x*multiplier;
+                this.bounds[i+1].y = this.getDegreesForAngles()[i].y*multiplier;   
+            }
+            
+        }
+        
+    }
+
 
     getBounds() {
         return this.bounds;

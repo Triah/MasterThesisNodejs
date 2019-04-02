@@ -3,12 +3,10 @@
 import Shape from '../abstract/shape.js';
 
 export default class MemoryCard extends Shape {
-    constructor(id, bounds, moveAble, targetAble, color, text, textVisible,size,privateVariables){
+    constructor(id, bounds, moveAble, targetAble, color, text, textVisible,privateVariables,size){
         super(id, bounds, moveAble, targetAble, color, text, textVisible,size);
         //Need an image
         //Needs an image-visible bool
-        //Need a match bool
-        //Needs a clone of some kind
         this.privateVariables = privateVariables;
     }
 
@@ -31,9 +29,7 @@ export default class MemoryCard extends Shape {
     process(e,objects){
         if(e.type == "mousedown"){
             this.mouseDownEvent();
-            for(var i = 0; i < objects.length; i++){
-                console.log(objects[i]);
-            }
+            this.scaleSize(0.9);
         } 
         if(e.type == "mousemove"){
             //this serves mostly as a way of showcasing how to do logic for each component to individualize it.
@@ -49,8 +45,9 @@ export default class MemoryCard extends Shape {
             if(listToAddTo[object].object == this.object){
                 if(listToAddTo[object].privateVariables.cloneExists == undefined){
                     var clone = new MemoryCard(listToAddTo.length,[{"x":200,"y":400},{"x":500, "y":400}, {"x": 500, "y":700}, {"x":200,"y":700}],listToAddTo[object].moveAble,
-                    listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables);
+                    listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables,listToAddTo[object].size);
                     listToAddTo[object].privateVariables.cloneExists = true;
+                    console.log(clone);
                     clone.privateVariables.cloneId = []
                     clone.privateVariables.cloneId.push(listToAddTo[object].id, clone.id)
                     listToAddTo.push(clone);
@@ -58,11 +55,6 @@ export default class MemoryCard extends Shape {
                 }
             }
         }
-        /*this.privateVariables.cloneExists = true;
-        this.privateVariables.cloneId = [];
-        var testObj = new MemoryCard(listToAddTo.length,[{"x":200,"y":400},{"x":500, "y":400}, {"x": 500, "y":700}, {"x":200,"y":700}],this.moveAble,this.targetAble,this.color,this.text,this.textVisible, this.privateVariables);
-        this.privateVariables.cloneId.push(this.id, testObj.id);*/
-        //listToAddTo.push(testObj);
     }
 
     mouseDownEvent(){
