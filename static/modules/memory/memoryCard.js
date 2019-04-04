@@ -5,17 +5,12 @@ import Shape from '../abstract/shape.js';
 export default class MemoryCard extends Shape {
     constructor(id, bounds, moveAble, targetAble, color, text, textVisible,privateVariables,size){
         super(id, bounds, moveAble, targetAble, color, text, textVisible,size);
-        //Need an image
-        //Needs an image-visible bool
         this.privateVariables = privateVariables;
     }
 
     setDefaultForUninstantiatedParameters(canvas){
-        super.setDefaultForUninstantiatedParameters(canvas);
-        
+        super.setDefaultForUninstantiatedParameters(canvas);     
         this.privateVariables = {"cloneExists": undefined, "cloneId": undefined, "activeObjects": [], "locked": false };
-        //Add new parameters
-        //create a clone of object and link them but let them be seperate objects.
     }
 
     init(objects){
@@ -31,13 +26,6 @@ export default class MemoryCard extends Shape {
         if(e.type == "mousedown"){
             this.checkMatching(objects,e);
         } 
-        if(e.type == "mousemove"){
-            //this serves mostly as a way of showcasing how to do logic for each component to individualize it.
-            //console.log("mousemoveevent");
-        }
-        if(e.type == "mouseup"){
-            //console.log("mouseupevent");
-        }
     }
 
     checkMatching(list,e){
