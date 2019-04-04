@@ -10,11 +10,15 @@ export default class MemoryCard extends Shape {
 
     setDefaultForUninstantiatedParameters(canvas){
         super.setDefaultForUninstantiatedParameters(canvas);     
-        this.privateVariables = {"cloneExists": undefined, "cloneId": undefined, "activeObjects": [], "locked": false };
+        this.privateVariables.activeObjects = [];
+        this.privateVariables.locked = false;
     }
 
     init(objects){
-        this.clone(objects);
+        if(this.privateVariables.cloneExists == undefined){
+            this.clone(objects);
+        }
+        
     }
 
     setObjectName(object) {
@@ -28,10 +32,18 @@ export default class MemoryCard extends Shape {
     }
 
     checkMatching(list,e){
+        var reset = false;
+        var nonpairedActive = [];
+
         if(this.getCollisionArea(e)){
             this.mouseDownEvent();
             if(this.textVisible && !this.privateVariables.locked){
-                this.privateVariables.activeObjects.push(this.id);
+                if(list[this.privateVariables.cloneId[0]].privateVariables.activeObjects.indexOf(this.id) == -1){
+                    list[this.privateVariables.cloneId[0]].privateVariables.activeObjects.push(this.id);
+                }
+                if(list[this.privateVariables.cloneId[1]].privateVariables.activeObjects.indexOf(this.id) == -1){
+                    list[this.privateVariables.cloneId[1]].privateVariables.activeObjects.push(this.id);
+                }
             } else {
                 for(var i = 0 ; i < this.privateVariables.activeObjects.length; i++){
                     if(this.privateVariables.activeObjects[i] == this.id && this.textVisible == false){
@@ -63,20 +75,13 @@ export default class MemoryCard extends Shape {
         for(var i = 0; i < lockedItems.length; i++){
             lockedIds.push(lockedItems[i].id);
         }
-        var nonpairedActive = []
+        console.log(reset);
         nonpairedActive = allItemsActivated.filter(id => !lockedIds.includes(id));
-
-        console.log(nonpairedActive);
+        
         if(nonpairedActive.length == 2){
-            for(var i = 0; i < list.length; i++){
-                for(var j = 0; j < nonpairedActive.length; j++){
-                    if(list[i].id == nonpairedActive[j]){
-                        list[i].privateVariables.activeObjects = [];                 
-                    }
-                }
-                
-            }
+            reset = true;
         }
+        
         if(nonpairedActive.length > 0 && nonpairedActive.length < 2){
             for(var i = 0; i < list.length; i++){
                 if(list[i].textVisible && list[i].privateVariables.activeObjects.indexOf(list[i].id) == -1){
@@ -87,11 +92,14 @@ export default class MemoryCard extends Shape {
     }
 
     clone(listToAddTo){
+        if(this.object != null){
         for(var object in listToAddTo){
             if(listToAddTo[object].object == this.object){
                 if(listToAddTo[object].privateVariables.cloneExists == undefined){
-                    var clone = new MemoryCard(listToAddTo.length,[],listToAddTo[object].moveAble,
-                    listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables,listToAddTo[object].size);
+                    if(this.object != null){
+                        var clone = eval("new " + this.object + "("+" listToAddTo.length,[],listToAddTo[object].moveAble," +
+                        "listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables,listToAddTo[object].size" +")"); 
+                    }
                     listToAddTo[object].privateVariables.cloneExists = true;
                     for(var i = 0; i < listToAddTo[object].bounds.length;i++){
                         clone.bounds[i] = {x:listToAddTo[object].bounds[i].x , y:listToAddTo[object].bounds[i].y }; 
@@ -103,6 +111,7 @@ export default class MemoryCard extends Shape {
                 }
             }
         }
+    }
     }
 
     mouseDownEvent(){

@@ -16,6 +16,10 @@ export default class Shape {
     setObjectName(object) {
         this.object = object;
     }
+
+    init(objects){
+        //do nothing
+    }
     
     updateParams(paramToBeUpdated){
         if(paramToBeUpdated == "size"){
