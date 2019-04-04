@@ -164,25 +164,25 @@ function createJSONfromInitObjects(objectList){
     draw();
   });
 
+
 function createObjects(list) { 
 list.forEach(object => { 
  for(var i = 0; i < object.length; i++){ 
  if(object[i].object == "abstractshape"){ 
-canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible); 
+canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].size); 
 }else if(object[i].object == "shapessquare"){ 
-canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible); 
+canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].size); 
 }else if(object[i].object == "memorymemoryCard"){ 
 canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables,object[i].size); 
+}else if(object[i].object == "abstractcollisionShape"){ 
+canvasObjects[i] = new abstractcollisionShape(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
 }
-canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);
-canvasObjects[i].setObjectName(object[i].object);
-}
- });
-for(var i = 0; i < canvasObjects.length; i++){
-  canvasObjects[i].init(canvasObjects);
-}
+canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}
+ }); 
+for(var i = 0; i < canvasObjects.length; i++){canvasObjects[i].init(canvasObjects);}
 canvasUpdated()
 }
 import abstractshape from '../static/modules/abstract/shape.js';
 import shapessquare from '../static/modules/shapes/Square.js';
 import memorymemoryCard from '../static/modules/memory/memoryCard.js';
+import abstractcollisionShape from '../static/modules/abstract/collisionShape.js';

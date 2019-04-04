@@ -105,9 +105,12 @@ export default class MemoryCard extends Shape {
         for(var object in listToAddTo){
             if(listToAddTo[object].object == this.object){
                 if(listToAddTo[object].privateVariables.cloneExists == undefined){
-                    var clone = new MemoryCard(listToAddTo.length,[{"x":200,"y":400},{"x":500, "y":400}, {"x": 500, "y":700}, {"x":200,"y":700}],listToAddTo[object].moveAble,
+                    var clone = new MemoryCard(listToAddTo.length,[],listToAddTo[object].moveAble,
                     listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables,listToAddTo[object].size);
                     listToAddTo[object].privateVariables.cloneExists = true;
+                    for(var i = 0; i < listToAddTo[object].bounds.length;i++){
+                        clone.bounds[i] = {x:listToAddTo[object].bounds[i].x , y:listToAddTo[object].bounds[i].y }; 
+                    }
                     clone.privateVariables.cloneId = []
                     clone.setObjectName(this.object);
                     clone.privateVariables.cloneId.push(listToAddTo[object].id, clone.id)

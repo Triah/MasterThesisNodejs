@@ -23,7 +23,7 @@ export default class Shape {
      */
     setDefaultForUninstantiatedParameters(canvas){
         if(this.bounds == null){
-            this.bounds = [{x:canvas.width/2-100, y:canvas.height/2+100},{x:canvas.width/2+150, y:canvas.height/2-150},{x:canvas.width/2+200, y:canvas.height/2+100}];
+            this.bounds = [{x:canvas.width/2-100, y:canvas.height/2-100},{x:canvas.width/2+100, y:canvas.height/2-100},{x:canvas.width/2+100, y:canvas.height/2+100}, {x:canvas.width/2-100,y:canvas.height/2+100}];
         }
         if(this.moveAble == null){
             this.moveAble = true;

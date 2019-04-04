@@ -161,7 +161,7 @@ function writeCreateObjectsAndImportMethod(callback) {
         }
 
       }
-      functionString += "\ncanvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}\n }); + \n";
+      functionString += "\ncanvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}\n }); \n";
       functionString += "for(var i = 0; i < canvasObjects.length; i++){canvasObjects[i].init(canvasObjects);}"
       functionString += "\ncanvasUpdated()\n}";
 
@@ -453,7 +453,7 @@ io.on('connection', function (socket) {
       players[socket.id] = {
         
       };
-      var testCanvasObjects = {"list":{"Components":'[{"id": 0, "bounds": [{"x":400,"y":400},{"x":700, "y":400}, {"x": 700, "y":700}, {"x":400,"y":700}],"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": false, "object":"memorymemoryCard", "size":0.4},{"id": 1, "bounds": [{"x":0,"y":400},{"x":300, "y":400}, {"x": 300, "y":700}, {"x":0,"y":700}],"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": false, "object":"memorymemoryCard","size":0.4}]', "Name":"memoryGame"}};
+      var testCanvasObjects = {"list":{"Components":'[{"id": 0, "bounds": null,"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": false, "object":"memorymemoryCard", "size":1},{"id": 1, "bounds": null,"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": false, "object":"memorymemoryCard","size":1}]', "Name":"memoryGame"}};
       socket.emit('initObjects',testCanvasObjects)
     }
   });
