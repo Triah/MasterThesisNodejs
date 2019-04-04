@@ -17,8 +17,10 @@ export default class Shape {
         this.object = object;
     }
     
-    updateParams(){
-        this.scaleSize(size);
+    updateParams(paramToBeUpdated){
+        if(paramToBeUpdated == "size"){
+            this.scaleSize(this.size);
+        }
     }
 
     /**
