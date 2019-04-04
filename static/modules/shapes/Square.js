@@ -9,7 +9,7 @@ export default class Square extends Shape{
 
     setDefaultForUninstantiatedParameters(canvas){
         super.setDefaultForUninstantiatedParameters(canvas);
-        this.bounds.push({x:100,y:100});
+        
         this.constructProperBounds(100,100);
     }
 

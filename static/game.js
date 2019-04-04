@@ -174,8 +174,8 @@ canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].mov
 canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].size); 
 }else if(object[i].object == "memorymemoryCard"){ 
 canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables,object[i].size); 
-}else if(object[i].object == "abstractcollisionShape"){ 
-canvasObjects[i] = new abstractcollisionShape(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
+}else if(object[i].object == "testsmemoryCard"){ 
+canvasObjects[i] = new testsmemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables,object[i].size); 
 }
 canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}
  }); 
@@ -185,4 +185,4 @@ canvasUpdated()
 import abstractshape from '../static/modules/abstract/shape.js';
 import shapessquare from '../static/modules/shapes/Square.js';
 import memorymemoryCard from '../static/modules/memory/memoryCard.js';
-import abstractcollisionShape from '../static/modules/abstract/collisionShape.js';
+import testsmemoryCard from '../static/modules/tests/memoryCard.js';

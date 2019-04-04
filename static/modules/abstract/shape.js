@@ -17,6 +17,10 @@ export default class Shape {
         this.object = object;
     }
     
+    updateParams(){
+        this.scaleSize(size);
+    }
+
     /**
      * This method must be extended when creating a new object for it to be usable by the game creator
      * @param {canvas} canvas 

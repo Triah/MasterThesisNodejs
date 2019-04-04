@@ -15,6 +15,7 @@ export default class MemoryCard extends Shape {
 
     init(objects){
         this.clone(objects);
+        this.scaleSize(this.size);
     }
 
     setObjectName(object) {
