@@ -38,6 +38,11 @@ function createJSONfromInitObjects(objectList){
     createObjects(objectsToBeCreated);
     canvasGrid.display(canvas, context);
   });
+
+  socket.on('updateStateDone', function(updatedStateObjects){
+    //TODO
+    
+  })
   
   canvasUpdated();
   
@@ -51,7 +56,7 @@ function createJSONfromInitObjects(objectList){
       if (!itemIsLocked && canvasObjects[i].getCollisionArea(e)) {
         itemIsLocked = true;
         lockedItem = canvasObjects[i];
-        canvasObjects[i].process(e, canvasObjects);
+        canvasObjects[i].process(e, canvasObjects, socket);
       }
     }
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -64,7 +69,7 @@ function createJSONfromInitObjects(objectList){
   canvas.onmousemove = function (e) {
     if (itemIsLocked && lockedItem != null) {
       if (lockedItem.moveAble) {
-        lockedItem.process(e,canvasObjects);
+        lockedItem.process(e,canvasObjects, socket);
         lockedItem.move(canvas, e);
       }
   
@@ -121,7 +126,7 @@ function createJSONfromInitObjects(objectList){
     //unlock item
     if (lockedItem != null) {
       socket.emit('updateItemPosition', lockedItem);
-      lockedItem.process(e,canvasObjects);
+      lockedItem.process(e,canvasObjects, socket);
       itemIsLocked = false;
       lockedItem = null;
       
@@ -173,16 +178,16 @@ canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].mov
 }else if(object[i].object == "shapessquare"){ 
 canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].size); 
 }else if(object[i].object == "memorymemoryCard"){ 
+  console.log(object[i].text);
 canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables,object[i].size); 
-}else if(object[i].object == "abstractcollisionShape"){ 
-canvasObjects[i] = new abstractcollisionShape(object[i].id,object[i].bounds,object[i].moveAble,object[i].collideAble,object[i].targetAble); 
 }
+ canvasObjects[i].setObjectName(object[i].object);
 canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}
  }); 
-for(var i = 0; i < canvasObjects.length; i++){canvasObjects[i].init(canvasObjects);}
+for(var i = 0; i < canvasObjects.length; i++){canvasObjects[i].init(canvasObjects);
+}
 canvasUpdated()
 }
 import abstractshape from '../static/modules/abstract/shape.js';
 import shapessquare from '../static/modules/shapes/Square.js';
 import memorymemoryCard from '../static/modules/memory/memoryCard.js';
-import abstractcollisionShape from '../static/modules/abstract/collisionShape.js';

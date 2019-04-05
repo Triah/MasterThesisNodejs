@@ -109,7 +109,7 @@ export default class Shape {
         return vectors;
     }
 
-    process(e,objects){
+    process(e,objects,socket){
         //Do nothing
     }
 

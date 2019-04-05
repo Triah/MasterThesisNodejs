@@ -161,8 +161,9 @@ function writeCreateObjectsAndImportMethod(callback) {
         }
 
       }
+      functionString += "\n canvasObjects[i].setObjectName(object[i].object);"
       functionString += "\ncanvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}\n }); \n";
-      functionString += "for(var i = 0; i < canvasObjects.length; i++){canvasObjects[i].init(canvasObjects);}"
+      functionString += "for(var i = 0; i < canvasObjects.length; i++){canvasObjects[i].init(canvasObjects);\n}"
       functionString += "\ncanvasUpdated()\n}";
 
       var importString = "";
@@ -468,6 +469,15 @@ io.on('connection', function (socket) {
     }
     io.to(players[socket.id].roomname).emit('updateItemPositionDone', lockedItem);
   });
+
+  socket.on('updateState', function(objects){
+      
+    //do something here
+    objects[0].text = "Tester";
+    io.to(players[socket.id].roomname).emit('updateStateDone',objects);
+      
+    
+  })
 
   //TODO: make a timer for the disconnection which allows the user to reconnect within a minute.
   socket.on('disconnect', function () {

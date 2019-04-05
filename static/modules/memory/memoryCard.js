@@ -8,10 +8,17 @@ export default class MemoryCard extends Shape {
         this.privateVariables = privateVariables;
     }
 
+
     setDefaultForUninstantiatedParameters(canvas){
-        super.setDefaultForUninstantiatedParameters(canvas);     
-        this.privateVariables.activeObjects = [];
-        this.privateVariables.locked = false;
+        super.setDefaultForUninstantiatedParameters(canvas);
+        if (this.privateVariables == null) {
+            this.privateVariables = { "cloneExists": undefined, "activeVariables": [], "locked": false, "cloneId": [] };
+        }
+        else {
+            this.privateVariables.activeObjects = [];
+            this.privateVariables.locked = false;
+        }
+        
     }
 
     init(objects){
@@ -25,13 +32,13 @@ export default class MemoryCard extends Shape {
         this.object = object;
     }
 
-    process(e,objects){
+    process(e,objects,socket){
         if(e.type == "mousedown"){
-            this.checkMatching(objects,e);
+            this.checkMatching(objects,e,socket);
         } 
     }
 
-    checkMatching(list,e){
+    checkMatching(list,e,socket){
         var reset = false;
         var nonpairedActive = [];
 
@@ -75,7 +82,6 @@ export default class MemoryCard extends Shape {
         for(var i = 0; i < lockedItems.length; i++){
             lockedIds.push(lockedItems[i].id);
         }
-        console.log(reset);
         nonpairedActive = allItemsActivated.filter(id => !lockedIds.includes(id));
         
         if(nonpairedActive.length == 2){
@@ -89,6 +95,7 @@ export default class MemoryCard extends Shape {
                 }
             }
         }
+        socket.emit('updateState',list);
     }
 
     clone(listToAddTo){
