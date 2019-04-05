@@ -33,15 +33,17 @@ function createJSONfromInitObjects(objectList){
   
   
   socket.on("initObjects", function (objectList) {
-    console.log(socket);
     var objectsToBeCreated = createJSONfromInitObjects(objectList);
     createObjects(objectsToBeCreated);
     canvasGrid.display(canvas, context);
   });
 
   socket.on('updateStateDone', function(updatedStateObjects){
-    //TODO
-    
+    for(var i = 0; i < updatedStateObjects.length; i++){
+      for(var update in updatedStateObjects[i]){
+        canvasObjects[i][update] = updatedStateObjects[i][update]
+      }
+    }
   })
   
   canvasUpdated();

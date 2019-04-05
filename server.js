@@ -459,6 +459,7 @@ io.on('connection', function (socket) {
     }
   });
 
+  //Updates a single item
   socket.on('updateItemPosition', function (lockedItem) {
     for (var v in canvasObjects) {
       if (JSON.parse(canvasObjects[v].Components).id == lockedItem.id) {
@@ -470,13 +471,9 @@ io.on('connection', function (socket) {
     io.to(players[socket.id].roomname).emit('updateItemPositionDone', lockedItem);
   });
 
+  //Updates all items
   socket.on('updateState', function(objects){
-      
-    //do something here
-    objects[0].text = "Tester";
     io.to(players[socket.id].roomname).emit('updateStateDone',objects);
-      
-    
   })
 
   //TODO: make a timer for the disconnection which allows the user to reconnect within a minute.
