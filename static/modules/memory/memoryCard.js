@@ -52,6 +52,16 @@ export default class MemoryCard extends Shape {
             }
         }
 
+        for(var i = 0; i < list.length; i++){
+            if(list[i].privateVariables.locked){
+                for(var obj in untargetables){
+                    if(untargetables[obj].id == list[i].id){
+                        untargetables.splice(obj,1);
+                    }
+                }
+            }
+        }
+
         for(var i = 0; i < untargetables.length; i++){
             if(untargetables.length == 2){
                 if(!untargetables[i].privateVariables.locked){
@@ -91,6 +101,7 @@ export default class MemoryCard extends Shape {
                         }
                     }
                 }
+
                 var allItemsActivated = [];
                 for (var i = 0; i < list.length; i++) {
                     if (list[i].privateVariables.activeObjects.length > 0) {
@@ -105,7 +116,8 @@ export default class MemoryCard extends Shape {
                 for (var i = 0; i < lockedItems.length; i++) {
                     lockedIds.push(lockedItems[i].id);
                 }
-                nonpairedActive = allItemsActivated.filter(id => !lockedIds.includes(id));
+                
+                /*nonpairedActive = allItemsActivated.filter(id => !lockedIds.includes(id));
 
                 if (nonpairedActive.length > 0 && nonpairedActive.length < 2) {
                     for (var i = 0; i < list.length; i++) {
@@ -113,7 +125,7 @@ export default class MemoryCard extends Shape {
                             list[i].textVisible = false
                         }
                     }
-                }
+                }*/
                 socket.emit('updateState', list);
             }
         }
