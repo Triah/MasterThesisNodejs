@@ -454,7 +454,7 @@ io.on('connection', function (socket) {
       players[socket.id] = {
         
       };
-      var testCanvasObjects = {"list":{"Components":'[{"id": 0, "bounds": null,"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": false, "object":"memorymemoryCard", "size":1},{"id": 1, "bounds": null,"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": false, "object":"memorymemoryCard","size":1}]', "Name":"memoryGame"}};
+      var testCanvasObjects = {"list":{"Components":'[{"id": 0, "bounds": null,"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": false, "object":"memorymemoryCard", "size":1, "imageURL":"https://cdn.shopify.com/s/files/1/2372/2285/articles/BmwBB2_IIAAeec2_557x_crop_center.progressive.jpg"},{"id": 1, "bounds": null,"moveAble":true, "targetAble": true, "color": "white", "text":"quite likely not working", "textVisible": false, "object":"memorymemoryCard","size":1, "imageURL":null}]', "Name":"memoryGame"}};
       socket.emit('initObjects',testCanvasObjects)
     }
   });

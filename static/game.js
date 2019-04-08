@@ -33,18 +33,11 @@ function createJSONfromInitObjects(objectList){
   
   
   socket.on("initObjects", function (objectList) {
+    console.log(socket);
     var objectsToBeCreated = createJSONfromInitObjects(objectList);
     createObjects(objectsToBeCreated);
     canvasGrid.display(canvas, context);
   });
-
-  socket.on('updateStateDone', function(updatedStateObjects){
-    for(var i = 0; i < updatedStateObjects.length; i++){
-      for(var update in updatedStateObjects[i]){
-        canvasObjects[i][update] = updatedStateObjects[i][update]
-      }
-    }
-  })
   
   canvasUpdated();
   
@@ -71,7 +64,7 @@ function createJSONfromInitObjects(objectList){
   canvas.onmousemove = function (e) {
     if (itemIsLocked && lockedItem != null) {
       if (lockedItem.moveAble) {
-        lockedItem.process(e,canvasObjects, socket);
+        lockedItem.process(e, canvasObjects, socket);
         lockedItem.move(canvas, e);
       }
   
@@ -128,7 +121,7 @@ function createJSONfromInitObjects(objectList){
     //unlock item
     if (lockedItem != null) {
       socket.emit('updateItemPosition', lockedItem);
-      lockedItem.process(e,canvasObjects, socket);
+      lockedItem.process(e, canvasObjects, socket);
       itemIsLocked = false;
       lockedItem = null;
       
@@ -180,8 +173,7 @@ canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].mov
 }else if(object[i].object == "shapessquare"){ 
 canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].size); 
 }else if(object[i].object == "memorymemoryCard"){ 
-  console.log(object[i].text);
-canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables,object[i].size); 
+canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables,object[i].size,object[i].imageURL); 
 }
  canvasObjects[i].setObjectName(object[i].object);
 canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}

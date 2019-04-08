@@ -3,15 +3,19 @@
 import Shape from '../abstract/shape.js';
 
 export default class MemoryCard extends Shape {
-    constructor(id, bounds, moveAble, targetAble, color, text, textVisible, privateVariables, size) {
+    constructor(id, bounds, moveAble, targetAble, color, text, textVisible, privateVariables, size, imageURL) {
         super(id, bounds, moveAble, targetAble, color, text, textVisible, size);
         this.privateVariables = privateVariables;
+        this.imageURL = imageURL;
     }
 
 
     setDefaultForUninstantiatedParameters(canvas) {
         super.setDefaultForUninstantiatedParameters(canvas);
         this.targetAble = true;
+        if(this.imageURL == null){
+            this.imageURL = "";
+        }
         if (this.privateVariables == null) {
             this.privateVariables = { "cloneExists": undefined, "activeVariables": [], "locked": false, "cloneId": [] };
         }
@@ -31,6 +35,36 @@ export default class MemoryCard extends Shape {
 
     setObjectName(object) {
         this.object = object;
+    }
+
+    draw(context) {
+        context.beginPath();
+        if(this.color != ""){
+            context.fillStyle = this.color;
+        }
+        context.moveTo(this.getBounds()[0].x, this.getBounds()[0].y);
+        for (var i = 1; i < this.getBounds().length; i++) {
+            context.lineTo(this.getBounds()[i].x, this.getBounds()[i].y);
+        }
+        context.strokeStyle = "#000000"
+        context.closePath();
+        context.fill();
+        if (this.text != "" && this.textVisible) {
+            context.font = "12px Arial";
+            context.strokeText(this.text, this.bounds[0].x+10, this.getCenter().y);
+        }
+        context.stroke();
+        if(this.imageURL != null){
+            if(this.textVisible){
+                var img = new Image()
+                img.src = this.imageURL;
+                var bounds = this.getBounds();
+                img.onload = function(){
+                    context.drawImage(img, bounds[0].x, bounds[0].y, Math.sqrt(Math.pow(bounds[1].x-bounds[0].x, 2) + Math.pow(bounds[1].y-bounds[0].y, 2)),Math.sqrt(Math.pow(bounds[2].x-bounds[1].x, 2) + Math.pow(bounds[2].y-bounds[1].y, 2)))
+                }
+            }
+            
+        }
     }
 
     process(e, objects, socket) {
@@ -116,16 +150,7 @@ export default class MemoryCard extends Shape {
                 for (var i = 0; i < lockedItems.length; i++) {
                     lockedIds.push(lockedItems[i].id);
                 }
-                
-                /*nonpairedActive = allItemsActivated.filter(id => !lockedIds.includes(id));
-
-                if (nonpairedActive.length > 0 && nonpairedActive.length < 2) {
-                    for (var i = 0; i < list.length; i++) {
-                        if (list[i].textVisible && list[i].privateVariables.activeObjects.indexOf(list[i].id) == -1) {
-                            list[i].textVisible = false
-                        }
-                    }
-                }*/
+                console.log(socket);
                 socket.emit('updateState', list);
             }
         }
@@ -138,8 +163,9 @@ export default class MemoryCard extends Shape {
                 if (listToAddTo[object].object == this.object) {
                     if (listToAddTo[object].privateVariables.cloneExists == undefined) {
                         if (this.object != null) {
+                            //TODO: FIX!!
                             var clone = eval("new " + this.object + "(" + " listToAddTo.length,[],listToAddTo[object].moveAble," +
-                                "listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables,listToAddTo[object].size" + ")");
+                                "listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables,listToAddTo[object].size,listToAddTo[object].imageURL" + ")");
                         }
                         listToAddTo[object].privateVariables.cloneExists = true;
                         for (var i = 0; i < listToAddTo[object].bounds.length; i++) {

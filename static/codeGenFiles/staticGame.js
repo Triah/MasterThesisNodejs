@@ -51,7 +51,7 @@ function createJSONfromInitObjects(objectList){
       if (!itemIsLocked && canvasObjects[i].getCollisionArea(e)) {
         itemIsLocked = true;
         lockedItem = canvasObjects[i];
-        canvasObjects[i].process(e, canvasObjects);
+        canvasObjects[i].process(e, canvasObjects, socket);
       }
     }
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -64,7 +64,7 @@ function createJSONfromInitObjects(objectList){
   canvas.onmousemove = function (e) {
     if (itemIsLocked && lockedItem != null) {
       if (lockedItem.moveAble) {
-        lockedItem.process(e,canvasObjects);
+        lockedItem.process(e, canvasObjects, socket);
         lockedItem.move(canvas, e);
       }
   
@@ -121,7 +121,7 @@ function createJSONfromInitObjects(objectList){
     //unlock item
     if (lockedItem != null) {
       socket.emit('updateItemPosition', lockedItem);
-      lockedItem.process(e,canvasObjects);
+      lockedItem.process(e, canvasObjects, socket);
       itemIsLocked = false;
       lockedItem = null;
       
