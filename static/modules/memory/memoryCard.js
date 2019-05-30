@@ -163,7 +163,6 @@ export default class MemoryCard extends Shape {
                 if (listToAddTo[object].object == this.object) {
                     if (listToAddTo[object].privateVariables.cloneExists == undefined) {
                         if (this.object != null) {
-                            //TODO: FIX!!
                             var clone = eval("new " + this.object + "(" + " listToAddTo.length,[],listToAddTo[object].moveAble," +
                                 "listToAddTo[object].targetAble,listToAddTo[object].color,listToAddTo[object].text,listToAddTo[object].textVisible,listToAddTo[object].privateVariables,listToAddTo[object].size,listToAddTo[object].imageURL" + ")");
                         }

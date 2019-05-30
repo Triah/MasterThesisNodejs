@@ -170,10 +170,10 @@ list.forEach(object => {
  for(var i = 0; i < object.length; i++){ 
  if(object[i].object == "abstractshape"){ 
 canvasObjects[i] = new abstractshape(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].size); 
-}else if(object[i].object == "shapessquare"){ 
-canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].size); 
 }else if(object[i].object == "memorymemoryCard"){ 
 canvasObjects[i] = new memorymemoryCard(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].privateVariables,object[i].size,object[i].imageURL); 
+}else if(object[i].object == "shapessquare"){ 
+canvasObjects[i] = new shapessquare(object[i].id,object[i].bounds,object[i].moveAble,object[i].targetAble,object[i].color,object[i].text,object[i].textVisible,object[i].size); 
 }
  canvasObjects[i].setObjectName(object[i].object);
 canvasObjects[i].setDefaultForUninstantiatedParameters(canvas);}
@@ -183,5 +183,5 @@ for(var i = 0; i < canvasObjects.length; i++){canvasObjects[i].init(canvasObject
 canvasUpdated()
 }
 import abstractshape from '../static/modules/abstract/shape.js';
-import shapessquare from '../static/modules/shapes/Square.js';
 import memorymemoryCard from '../static/modules/memory/memoryCard.js';
+import shapessquare from '../static/modules/shapes/square.js';
